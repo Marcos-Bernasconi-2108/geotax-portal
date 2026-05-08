@@ -7,52 +7,31 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── RESET & BASE ─────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:      #0F172A;
-  --surface: #1E293B;
-  --surface2:#263348;
-  --border:  #334155;
-  --text:    #F1F5F9;
-  --muted:   #94A3B8;
-  --accent:  #3B82F6;
-  --accent2: #2563EB;
-  --green:   #10B981;
-  --orange:  #F59E0B;
-  --red:     #EF4444;
-  --radius:  12px;
-  --shadow:  0 4px 24px rgba(0,0,0,.35);
+  --bg:#0F172A;--surface:#1E293B;--surface2:#263348;--border:#334155;
+  --text:#F1F5F9;--muted:#94A3B8;--accent:#3B82F6;--accent2:#2563EB;
+  --green:#10B981;--orange:#F59E0B;--red:#EF4444;--radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
 }
 [data-theme="light"]{
-  --bg:      #F1F5F9;
-  --surface: #FFFFFF;
-  --surface2:#F8FAFC;
-  --border:  #E2E8F0;
-  --text:    #0F172A;
-  --muted:   #64748B;
-  --shadow:  0 4px 24px rgba(0,0,0,.08);
+  --bg:#F1F5F9;--surface:#FFFFFF;--surface2:#F8FAFC;--border:#E2E8F0;
+  --text:#0F172A;--muted:#64748B;--shadow:0 4px 24px rgba(0,0,0,.08);
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
-a{color:inherit;text-decoration:none}
 button{cursor:pointer;border:none;font-family:inherit}
-input{font-family:inherit}
-
-/* ── SCREENS ──────────────────────────────────────────────── */
+input,textarea,select{font-family:inherit}
 .screen{display:none;animation:fadeIn .35s ease}
 .screen.active{display:flex}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* ══════════════════════════════════════════════════════════ */
-/*  LOGIN SCREEN                                              */
-/* ══════════════════════════════════════════════════════════ */
+/* LOGIN */
 #loginScreen{min-height:100vh;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(59,130,246,.25) 0%,transparent 70%)}
-.login-bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233B82F6' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
 .login-card{position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 44px;width:100%;max-width:420px;box-shadow:var(--shadow)}
 .login-brand{display:flex;align-items:center;gap:12px;margin-bottom:36px}
 .login-logo{width:42px;height:42px;background:linear-gradient(135deg,#1E3A8A,#3B82F6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.login-brand-text h1{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.login-brand-text h1{font-size:18px;font-weight:700}
 .login-brand-text p{font-size:12px;color:var(--muted);margin-top:1px}
 .login-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.5px;margin-bottom:24px}
 .login-badge::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
@@ -61,81 +40,59 @@ input{font-family:inherit}
 .login-sub{font-size:14px;color:var(--muted);margin-bottom:32px}
 .field{margin-bottom:18px}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.4px;margin-bottom:8px;text-transform:uppercase}
-.field input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;color:var(--text);transition:border-color .2s,box-shadow .2s;outline:none}
+.field input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;color:var(--text);transition:border-color .2s;outline:none}
 .field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
 .field input::placeholder{color:var(--muted)}
-.login-btn{width:100%;background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border-radius:10px;padding:13px;font-size:15px;font-weight:600;margin-top:8px;transition:opacity .2s,transform .1s}
+.login-btn{width:100%;background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border-radius:10px;padding:13px;font-size:15px;font-weight:600;margin-top:8px;transition:opacity .2s}
 .login-btn:hover{opacity:.9}
-.login-btn:active{transform:scale(.99)}
-.login-forgot{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
-.login-forgot a{color:var(--accent);font-weight:500}
-.login-footer{margin-top:36px;padding-top:24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
-.login-footer span{display:flex;align-items:center;gap:4px}
 .demo-hint{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--green);margin-bottom:20px}
 .demo-hint strong{display:block;margin-bottom:2px}
+.login-footer{margin-top:36px;padding-top:24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
 
-/* ══════════════════════════════════════════════════════════ */
-/*  APP LAYOUT                                                */
-/* ══════════════════════════════════════════════════════════ */
+/* APP */
 #appScreen{min-height:100vh;flex-direction:row}
-
-/* SIDEBAR */
 .sidebar{width:260px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
 .sidebar-top{padding:20px 16px 16px;border-bottom:1px solid var(--border)}
 .sidebar-brand{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .s-logo{width:34px;height:34px;background:linear-gradient(135deg,#1E3A8A,#3B82F6);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.s-brand-name{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.s-brand-name{font-size:15px;font-weight:700}
 .s-brand-sub{font-size:10px;color:var(--muted)}
 .company-selector{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s}
 .company-selector:hover{border-color:var(--accent)}
 .company-avatar{width:28px;height:28px;background:linear-gradient(135deg,#7C3AED,#EC4899);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
-.company-info{flex:1;min-width:0}
-.company-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.company-name{font-size:13px;font-weight:600}
 .company-type{font-size:10px;color:var(--muted)}
-.company-chevron{color:var(--muted);font-size:12px}
 .sidebar-nav{padding:12px 8px;flex:1}
 .nav-section{margin-bottom:20px}
 .nav-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;padding:0 8px;margin-bottom:6px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s;position:relative}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s}
 .nav-item:hover{background:var(--surface2);color:var(--text)}
 .nav-item.active{background:rgba(59,130,246,.12);color:var(--accent)}
-.nav-item .nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
-.nav-item .nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
-.nav-item .nav-badge.orange{background:var(--orange)}
-.nav-item .nav-badge.green{background:var(--green)}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.nav-badge.orange{background:var(--orange)}
+.nav-badge.green{background:var(--green)}
 .sidebar-bottom{padding:12px 8px;border-top:1px solid var(--border)}
 .user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:background .15s}
 .user-card:hover{background:var(--surface2)}
 .user-avatar{width:32px;height:32px;background:linear-gradient(135deg,#2563EB,#7C3AED);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
-.user-info{flex:1;min-width:0}
-.user-name{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-name{font-size:12.5px;font-weight:600}
 .user-role{font-size:10px;color:var(--muted)}
-.user-menu-btn{color:var(--muted);font-size:14px;transition:color .15s}
-.user-card:hover .user-menu-btn{color:var(--text)}
-
-/* MAIN CONTENT */
 .main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
 .topbar{height:60px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;background:var(--surface);flex-shrink:0}
 .topbar-title{font-size:15px;font-weight:600;flex:1}
 .topbar-actions{display:flex;align-items:center;gap:10px}
 .icon-btn{width:36px;height:36px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .15s;color:var(--text)}
 .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
-.notif-dot{position:relative}
-.notif-dot::after{content:'';position:absolute;top:6px;right:6px;width:6px;height:6px;background:var(--red);border-radius:50%;border:2px solid var(--surface)}
 .content{flex:1;padding:28px;overflow-y:auto}
-
-/* CONTENT SECTIONS */
 .content-section{display:none}
 .content-section.active{display:block;animation:fadeIn .3s ease}
 
-/* ══════════════════════════════════════════════════════════ */
-/*  DASHBOARD                                                 */
-/* ══════════════════════════════════════════════════════════ */
+/* DASHBOARD */
 .welcome-bar{background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(124,58,237,.15));border:1px solid rgba(59,130,246,.25);border-radius:16px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between}
-.welcome-text h2{font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
-.welcome-text p{font-size:13.5px;color:var(--muted)}
-.welcome-action{background:var(--accent);color:#fff;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;transition:opacity .2s}
-.welcome-action:hover{opacity:.85}
+.welcome-bar h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.welcome-bar p{font-size:13.5px;color:var(--muted)}
+.welcome-action{background:var(--accent);color:#fff;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:border-color .2s,transform .2s}
 .stat-card:hover{border-color:var(--accent);transform:translateY(-2px)}
@@ -144,13 +101,14 @@ input{font-family:inherit}
 .stat-change{font-size:12px;color:var(--green)}
 .stat-change.neg{color:var(--red)}
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.section-title{font-size:16px;font-weight:700;letter-spacing:-.2px}
+.section-title{font-size:16px;font-weight:700}
 .section-link{font-size:13px;color:var(--accent);font-weight:500;cursor:pointer}
+
+/* AGENT CARDS */
 .agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px}
 .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s}
 .agent-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 32px rgba(59,130,246,.15)}
-.agent-card-header{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;overflow:hidden}
-.agent-card-header::after{content:'';position:absolute;inset:0;opacity:.9}
+.agent-card-header{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px}
 .ah-blue{background:linear-gradient(135deg,#1E3A8A,#3B82F6)}
 .ah-purple{background:linear-gradient(135deg,#4C1D95,#7C3AED)}
 .ah-teal{background:linear-gradient(135deg,#064E3B,#10B981)}
@@ -165,14 +123,14 @@ input{font-family:inherit}
 .tag-societario{background:rgba(124,58,237,.12);color:#A78BFA}
 .tag-financiero{background:rgba(16,185,129,.12);color:var(--green)}
 .tag-operativo{background:rgba(245,158,11,.12);color:var(--orange)}
-.agent-card-body h3{font-size:15px;font-weight:700;margin-bottom:6px;letter-spacing:-.2px}
+.agent-card-body h3{font-size:15px;font-weight:700;margin-bottom:6px}
 .agent-card-body p{font-size:12.5px;color:var(--muted);line-height:1.5;margin-bottom:14px}
 .agent-card-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:12px}
-.agent-status{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600}
-.status-dot{width:6px;height:6px;border-radius:50%}
-.status-ready .status-dot{background:var(--green)}
-.status-ready{color:var(--green)}
-.agent-open-btn{font-size:12px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:4px}
+.agent-status{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--green)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.agent-open-btn{font-size:12px;font-weight:600;color:var(--accent)}
+
+/* ACTIVITY */
 .activity-list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .activity-item{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border);transition:background .15s}
 .activity-item:last-child{border-bottom:none}
@@ -190,38 +148,42 @@ input{font-family:inherit}
 .ab-done{background:rgba(16,185,129,.12);color:var(--green)}
 .ab-run{background:rgba(59,130,246,.12);color:var(--accent)}
 
-/* ══════════════════════════════════════════════════════════ */
-/*  AGENT DETAIL PAGE                                         */
-/* ══════════════════════════════════════════════════════════ */
+/* AGENT DETAIL */
 .agent-detail-header{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;gap:20px}
 .agent-detail-icon{width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
-.agent-detail-info h2{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:4px}
+.agent-detail-info h2{font-size:22px;font-weight:700;margin-bottom:4px}
 .agent-detail-info p{font-size:13.5px;color:var(--muted);line-height:1.5}
 .agent-detail-meta{margin-left:auto;text-align:right}
-.agent-detail-meta .status-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);color:var(--green);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;margin-bottom:6px}
-.agent-detail-meta p{font-size:11px;color:var(--muted)}
-.agent-workspace{display:grid;grid-template-columns:1fr 380px;gap:20px}
-.workspace-left{}
-.workspace-right{}
+.status-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);color:var(--green);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;margin-bottom:6px}
+.agent-workspace{display:grid;grid-template-columns:1fr 360px;gap:20px}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
 .panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .panel-header h3{font-size:14px;font-weight:700}
 .panel-body{padding:20px}
 .input-group{margin-bottom:16px}
 .input-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px}
-.input-group input,.input-group select,.input-group textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13.5px;color:var(--text);outline:none;transition:border-color .2s;font-family:inherit}
-.input-group input:focus,.input-group select:focus,.input-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group input,.input-group select,.input-group textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13.5px;color:var(--text);outline:none;transition:border-color .2s}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{border-color:var(--accent)}
 .input-group textarea{resize:vertical;min-height:90px;line-height:1.5}
 .input-group select option{background:var(--surface)}
-.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:32px;text-align:center;cursor:pointer;transition:all .2s}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
 .upload-zone:hover{border-color:var(--accent);background:rgba(59,130,246,.05)}
-.upload-zone .upload-icon{font-size:36px;margin-bottom:10px}
+.upload-zone.uploaded{border-color:var(--green);background:rgba(16,185,129,.05)}
+.upload-zone input[type="file"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.upload-zone .upload-icon{font-size:34px;margin-bottom:8px}
 .upload-zone h4{font-size:14px;font-weight:600;margin-bottom:4px}
 .upload-zone p{font-size:12px;color:var(--muted)}
+.file-hint{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--orange);margin-bottom:16px;line-height:1.5}
+.file-hint strong{display:block;margin-bottom:2px}
+.paste-toggle{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;text-align:center;margin-top:10px;display:block}
+.paste-area{display:none;margin-top:12px}
+.paste-area.show{display:block}
+
 .run-btn{width:100%;background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border-radius:10px;padding:14px;font-size:15px;font-weight:700;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .run-btn:hover{opacity:.9;transform:translateY(-1px)}
-.run-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.output-box{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px;min-height:160px;font-size:13px;line-height:1.7;color:var(--muted);font-family:'Inter',sans-serif}
+.output-box{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px;min-height:160px;font-size:13px;line-height:1.7;color:var(--muted);white-space:pre-wrap}
 .output-box.has-content{color:var(--text)}
 .output-actions{display:flex;gap:8px;margin-top:12px}
 .out-btn{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px;font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
@@ -233,6 +195,19 @@ input{font-family:inherit}
 .hist-info h5{font-size:13px;font-weight:600;margin-bottom:2px}
 .hist-info p{font-size:11px;color:var(--muted)}
 .hist-dl{font-size:11px;color:var(--accent);font-weight:600;cursor:pointer}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:20px;transition:color .15s}
+.back-btn:hover{color:var(--text)}
+
+/* CHAT */
+.chat-messages{min-height:200px;max-height:380px;overflow-y:auto;margin-bottom:16px;display:flex;flex-direction:column;gap:12px}
+.msg-bot{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;margin-right:20%}
+.msg-user{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;margin-left:20%}
+.chat-input-row{display:flex;gap:8px}
+.chat-input-row input{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13.5px;color:var(--text);outline:none}
+.chat-input-row input:focus{border-color:var(--accent)}
+.chat-send-btn{background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;font-size:13px;font-weight:600}
+
+/* PROCESSING */
 .processing-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .processing-overlay.show{display:flex}
 .processing-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px 48px;text-align:center;max-width:340px}
@@ -244,26 +219,17 @@ input{font-family:inherit}
 .p-step{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12.5px;color:var(--muted);transition:color .3s}
 .p-step.done{color:var(--green)}
 .p-step.active-step{color:var(--text)}
-.p-step .p-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .3s}
+.p-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .3s}
 .p-step.done .p-dot{background:var(--green);border-color:var(--green)}
 .p-step.active-step .p-dot{border-color:var(--accent);animation:pulse 1.2s infinite}
 
-/* ══════════════════════════════════════════════════════════ */
-/*  MISC UTILITIES                                            */
-/* ══════════════════════════════════════════════════════════ */
-.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-bottom:20px}
-.breadcrumb .sep{opacity:.4}
-.breadcrumb .current{color:var(--text);font-weight:600}
-.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:20px;transition:color .15s}
-.back-btn:hover{color:var(--text)}
-.tag-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+/* TOAST */
 .notification-toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);z-index:200;transform:translateY(80px);opacity:0;transition:all .35s}
 .notification-toast.show{transform:translateY(0);opacity:1}
 .toast-icon{width:32px;height:32px;background:rgba(16,185,129,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .toast-text h4{font-size:13.5px;font-weight:700;margin-bottom:2px}
 .toast-text p{font-size:12px;color:var(--muted)}
 .toast-close{color:var(--muted);font-size:16px;cursor:pointer;margin-left:8px}
-/* Scrollbar */
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
@@ -271,359 +237,141 @@ input{font-family:inherit}
 </head>
 <body>
 
-<!-- ══════════════════════════════════════ LOGIN ══════════════════════════════════════ -->
+<!-- LOGIN -->
 <div id="loginScreen" class="screen active">
   <div class="login-bg"></div>
   <div class="login-card">
     <div class="login-brand">
       <div class="login-logo">🏢</div>
-      <div class="login-brand-text">
-        <h1>GeoTax SAS</h1>
-        <p>Portal de Inteligencia Artificial</p>
-      </div>
+      <div class="login-brand-text"><h1>GeoTax SAS</h1><p>Portal de Inteligencia Artificial</p></div>
     </div>
     <div class="login-badge">● GEOTAX × RED INTERCABLE</div>
     <h2 class="login-title">Bienvenido</h2>
     <p class="login-sub">Ingresá con tu cuenta para acceder a los agentes de IA.</p>
-    <div class="demo-hint">
-      <strong>Acceso de demo:</strong>
-      usuario: marcos@geotax.com.ar &nbsp;|&nbsp; contraseña: cualquier texto
-    </div>
-    <div class="field">
-      <label>Correo electrónico</label>
-      <input type="email" id="loginEmail" placeholder="tu@email.com" value="marcos@geotax.com.ar">
-    </div>
-    <div class="field">
-      <label>Contraseña</label>
-      <input type="password" id="loginPass" placeholder="••••••••" value="••••••••">
-    </div>
+    <div class="demo-hint"><strong>Acceso de demo:</strong> usuario: marcos@geotax.com.ar &nbsp;|&nbsp; contraseña: cualquier texto</div>
+    <div class="field"><label>Correo electrónico</label><input type="email" id="loginEmail" placeholder="tu@email.com" value="marcos@geotax.com.ar"></div>
+    <div class="field"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" value="••••••••"></div>
     <button class="login-btn" onclick="doLogin()">Ingresar al portal →</button>
-    <p class="login-forgot"><a href="#">¿Olvidaste tu contraseña?</a></p>
-    <div class="login-footer">
-      <span>🔒 Acceso seguro con JWT</span>
-      <span>Powered by Claude AI</span>
-    </div>
+    <div class="login-footer"><span>🔒 Acceso seguro</span><span>Powered by Claude AI</span></div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════ APP ═══════════════════════════════════════ -->
+<!-- APP -->
 <div id="appScreen" class="screen">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-top">
       <div class="sidebar-brand">
         <div class="s-logo">🏢</div>
-        <div>
-          <div class="s-brand-name">GeoTax SAS</div>
-          <div class="s-brand-sub">Portal IA — v2.0</div>
-        </div>
+        <div><div class="s-brand-name">GeoTax SAS</div><div class="s-brand-sub">Portal IA — v2.0</div></div>
       </div>
-      <div class="company-selector" onclick="alert('Selector de empresa — en la versión final permite cambiar entre clientes')">
+      <div class="company-selector">
         <div class="company-avatar">RI</div>
-        <div class="company-info">
-          <div class="company-name">Red Intercable</div>
-          <div class="company-type">Responsable Inscripto</div>
-        </div>
-        <div class="company-chevron">⌄</div>
+        <div><div class="company-name">Red Intercable</div><div class="company-type">Responsable Inscripto</div></div>
+        <div style="margin-left:auto;color:var(--muted)">⌄</div>
       </div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section">
         <div class="nav-label">Principal</div>
-        <div class="nav-item active" onclick="showSection('dashboard', this)">
-          <span class="nav-icon">⊞</span> Dashboard
-        </div>
-        <div class="nav-item" onclick="showSection('agentes', this)">
-          <span class="nav-icon">🤖</span> Agentes IA
-          <span class="nav-badge">8</span>
-        </div>
-        <div class="nav-item" onclick="showSection('historial', this)">
-          <span class="nav-icon">📋</span> Historial
-        </div>
-        <div class="nav-item" onclick="showSection('documentos', this)">
-          <span class="nav-icon">📁</span> Documentos
-          <span class="nav-badge green">3</span>
-        </div>
+        <div class="nav-item active" onclick="showSection('dashboard',this)"><span class="nav-icon">⊞</span>Dashboard</div>
+        <div class="nav-item" onclick="showSection('agentes',this)"><span class="nav-icon">🤖</span>Agentes IA<span class="nav-badge">8</span></div>
+        <div class="nav-item" onclick="showSection('historial',this)"><span class="nav-icon">📋</span>Historial</div>
+        <div class="nav-item" onclick="showSection('documentos',this)"><span class="nav-icon">📁</span>Documentos<span class="nav-badge green">3</span></div>
       </div>
       <div class="nav-section">
         <div class="nav-label">Agentes</div>
-        <div class="nav-item" onclick="openAgent('corporativo')">
-          <span class="nav-icon">💬</span> Asistente Corp.
-        </div>
-        <div class="nav-item" onclick="openAgent('actas')">
-          <span class="nav-icon">📜</span> Generador Actas
-        </div>
-        <div class="nav-item" onclick="openAgent('resultados')">
-          <span class="nav-icon">📊</span> Análisis Mensual
-        </div>
-        <div class="nav-item" onclick="openAgent('conciliacion')">
-          <span class="nav-icon">🏦</span> Conciliación Banc.
-        </div>
-        <div class="nav-item" onclick="openAgent('amortizaciones')">
-          <span class="nav-icon">📉</span> Amortizaciones
-        </div>
-        <div class="nav-item" onclick="openAgent('pagos')">
-          <span class="nav-icon">💳</span> Propuesta Pagos
-        </div>
-        <div class="nav-item" onclick="openAgent('facturas')">
-          <span class="nav-icon">🧾</span> Carga Facturas
-          <span class="nav-badge orange">!</span>
-        </div>
+        <div class="nav-item" onclick="openAgent('corporativo')"><span class="nav-icon">💬</span>Asistente Corp.</div>
+        <div class="nav-item" onclick="openAgent('actas')"><span class="nav-icon">📜</span>Generador Actas</div>
+        <div class="nav-item" onclick="openAgent('resultados')"><span class="nav-icon">📊</span>Análisis Mensual</div>
+        <div class="nav-item" onclick="openAgent('conciliacion')"><span class="nav-icon">🏦</span>Conciliación Banc.</div>
+        <div class="nav-item" onclick="openAgent('amortizaciones')"><span class="nav-icon">📉</span>Amortizaciones</div>
+        <div class="nav-item" onclick="openAgent('pagos')"><span class="nav-icon">💳</span>Propuesta Pagos</div>
+        <div class="nav-item" onclick="openAgent('facturas')"><span class="nav-icon">🧾</span>Carga Facturas<span class="nav-badge orange">!</span></div>
+        <div class="nav-item" onclick="openAgent('soporte')"><span class="nav-icon">🎧</span>Soporte</div>
       </div>
       <div class="nav-section">
-        <div class="nav-label">Configuración</div>
-        <div class="nav-item">
-          <span class="nav-icon">🏢</span> Empresas
-        </div>
-        <div class="nav-item">
-          <span class="nav-icon">👥</span> Usuarios
-        </div>
-        <div class="nav-item" onclick="toggleTheme()">
-          <span class="nav-icon" id="themeIcon">☀️</span> <span id="themeLabel">Modo claro</span>
-        </div>
+        <div class="nav-label">Config.</div>
+        <div class="nav-item" onclick="toggleTheme()"><span class="nav-icon" id="themeIcon">☀️</span><span id="themeLabel">Modo claro</span></div>
       </div>
     </nav>
     <div class="sidebar-bottom">
       <div class="user-card">
         <div class="user-avatar">MB</div>
-        <div class="user-info">
-          <div class="user-name">Marcos Bernasconi</div>
-          <div class="user-role">Super Admin</div>
-        </div>
-        <div class="user-menu-btn" onclick="doLogout()">⏏</div>
+        <div><div class="user-name">Marcos Bernasconi</div><div class="user-role">Super Admin</div></div>
+        <div style="margin-left:auto;color:var(--muted);cursor:pointer" onclick="doLogout()">⏏</div>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <div class="topbar-title" id="topbarTitle">Dashboard</div>
       <div class="topbar-actions">
-        <div class="icon-btn notif-dot" title="Notificaciones">🔔</div>
-        <div class="icon-btn" title="Buscar">🔍</div>
-        <div class="icon-btn" onclick="toggleTheme()" title="Cambiar tema">🌙</div>
+        <div class="icon-btn">🔔</div>
+        <div class="icon-btn" onclick="toggleTheme()">🌙</div>
       </div>
     </div>
     <div class="content">
 
-      <!-- ─── DASHBOARD ─────────────────────── -->
+      <!-- DASHBOARD -->
       <div id="sec-dashboard" class="content-section active">
         <div class="welcome-bar">
-          <div class="welcome-text">
-            <h2>Buenos días, Marcos 👋</h2>
-            <p>Red Intercable · Mayo 2026 · Todo funcionando correctamente</p>
-          </div>
-          <button class="welcome-action" onclick="openAgent('actas')">+ Nueva tarea con IA</button>
+          <div><h2>Buenos días, Marcos 👋</h2><p>Red Intercable · Mayo 2026 · Todo funcionando correctamente</p></div>
+          <button class="welcome-action" onclick="openAgent('conciliacion')">+ Nueva tarea con IA</button>
         </div>
         <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label">Sesiones este mes</div>
-            <div class="stat-value">47</div>
-            <div class="stat-change">↑ 18% vs mes anterior</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Docs generados</div>
-            <div class="stat-value">23</div>
-            <div class="stat-change">↑ 12 nuevos</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Horas ahorradas</div>
-            <div class="stat-value">61</div>
-            <div class="stat-change">↑ estimado este mes</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Costo IA (USD)</div>
-            <div class="stat-value">$8.40</div>
-            <div class="stat-change neg">↑ uso mayor al mes pasado</div>
-          </div>
+          <div class="stat-card"><div class="stat-label">Sesiones este mes</div><div class="stat-value">47</div><div class="stat-change">↑ 18% vs mes anterior</div></div>
+          <div class="stat-card"><div class="stat-label">Docs generados</div><div class="stat-value">23</div><div class="stat-change">↑ 12 nuevos</div></div>
+          <div class="stat-card"><div class="stat-label">Horas ahorradas</div><div class="stat-value">61</div><div class="stat-change">↑ estimado este mes</div></div>
+          <div class="stat-card"><div class="stat-label">Costo IA (USD)</div><div class="stat-value">$8.40</div><div class="stat-change neg">↑ uso mayor al mes pasado</div></div>
         </div>
-        <div class="section-header">
-          <div class="section-title">Agentes disponibles</div>
-          <div class="section-link" onclick="showSection('agentes', null)">Ver todos →</div>
-        </div>
-        <div class="agents-grid">
-          <div class="agent-card" onclick="openAgent('corporativo')">
-            <div class="agent-card-header ah-blue">💬</div>
-            <div class="agent-card-body">
-              <span class="agent-tag tag-contable">Chatbot</span>
-              <h3>Asistente Corporativo</h3>
-              <p>Responde preguntas usando la base documental interna de Geo Tax con IA.</p>
-              <div class="agent-card-footer">
-                <span class="agent-status status-ready"><span class="status-dot"></span>Listo</span>
-                <span class="agent-open-btn">Abrir →</span>
-              </div>
-            </div>
-          </div>
-          <div class="agent-card" onclick="openAgent('actas')">
-            <div class="agent-card-header ah-purple">📜</div>
-            <div class="agent-card-body">
-              <span class="agent-tag tag-societario">Societario</span>
-              <h3>Generador de Actas</h3>
-              <p>Redacta actas de directorio, asamblea y reunión de socios con lenguaje legal argentino.</p>
-              <div class="agent-card-footer">
-                <span class="agent-status status-ready"><span class="status-dot"></span>Listo</span>
-                <span class="agent-open-btn">Abrir →</span>
-              </div>
-            </div>
-          </div>
-          <div class="agent-card" onclick="openAgent('resultados')">
-            <div class="agent-card-header ah-teal">📊</div>
-            <div class="agent-card-body">
-              <span class="agent-tag tag-financiero">Financiero</span>
-              <h3>Análisis de Resultados</h3>
-              <p>Analiza estados financieros mensuales, detecta tendencias y genera insights ejecutivos.</p>
-              <div class="agent-card-footer">
-                <span class="agent-status status-ready"><span class="status-dot"></span>Listo</span>
-                <span class="agent-open-btn">Abrir →</span>
-              </div>
-            </div>
-          </div>
-          <div class="agent-card" onclick="openAgent('conciliacion')">
-            <div class="agent-card-header ah-indigo">🏦</div>
-            <div class="agent-card-body">
-              <span class="agent-tag tag-contable">Contable</span>
-              <h3>Conciliación Bancaria</h3>
-              <p>Concilia extractos bancarios con el mayor contable y genera reporte de diferencias.</p>
-              <div class="agent-card-footer">
-                <span class="agent-status status-ready"><span class="status-dot"></span>Listo</span>
-                <span class="agent-open-btn">Abrir →</span>
-              </div>
-            </div>
-          </div>
-          <div class="agent-card" onclick="openAgent('amortizaciones')">
-            <div class="agent-card-header ah-cyan">📉</div>
-            <div class="agent-card-body">
-              <span class="agent-tag tag-contable">RT 17 FACPCE</span>
-              <h3>Amortizaciones</h3>
-              <p>Calcula amortizaciones por método lineal, decreciente y suma de dígitos según RT 17.</p>
-              <div class="agent-card-footer">
-                <span class="agent-status status-ready"><span class="status-dot"></span>Listo</span>
-                <span class="agent-open-btn">Abrir →</span>
-              </div>
-            </div>
-          </div>
-          <div class="agent-card" onclick="openAgent('pagos')">
-            <div class="agent-card-header ah-orange">💳</div>
-            <div class="agent-card-body">
-              <span class="agent-tag tag-financiero">Tesorería</span>
-              <h3>Propuesta de Pagos</h3>
-              <p>Optimiza el flujo de pagos semanal a proveedores según caja y vencimientos.</p>
-              <div class="agent-card-footer">
-                <span class="agent-status status-ready"><span class="status-dot"></span>Listo</span>
-                <span class="agent-open-btn">Abrir →</span>
-              </div>
-            </div>
-          </div>
-          <div class="agent-card" onclick="openAgent('facturas')">
-            <div class="agent-card-header ah-rose">🧾</div>
-            <div class="agent-card-body">
-              <span class="agent-tag tag-operativo">Operativo</span>
-              <h3>Carga Masiva Facturas</h3>
-              <p>Extrae datos de PDFs de facturas, clasifica proveedores y detecta duplicados automáticamente.</p>
-              <div class="agent-card-footer">
-                <span class="agent-status status-ready"><span class="status-dot"></span>Listo</span>
-                <span class="agent-open-btn">Abrir →</span>
-              </div>
-            </div>
-          </div>
-          <div class="agent-card" onclick="openAgent('soporte')">
-            <div class="agent-card-header ah-pink">🎧</div>
-            <div class="agent-card-body">
-              <span class="agent-tag tag-operativo">Soporte</span>
-              <h3>Soporte a Mandantes</h3>
-              <p>Centraliza consultas de clientes, respuestas automáticas y seguimiento de tickets.</p>
-              <div class="agent-card-footer">
-                <span class="agent-status status-ready"><span class="status-dot"></span>Listo</span>
-                <span class="agent-open-btn">Abrir →</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="section-header">
-          <div class="section-title">Actividad reciente</div>
-        </div>
+        <div class="section-header"><div class="section-title">Agentes disponibles</div><div class="section-link" onclick="showSection('agentes',null)">Ver todos →</div></div>
+        <div class="agents-grid" id="dashAgentGrid"></div>
+        <div class="section-header"><div class="section-title">Actividad reciente</div></div>
         <div class="activity-list">
-          <div class="activity-item">
-            <div class="activity-icon ai-purple">📜</div>
-            <div class="activity-info"><h4>Acta de Directorio — Red Intercable</h4><p>Generada por Marcos · Orden del día: Aprobación EECC 2025</p></div>
-            <span class="activity-badge ab-done">Completado</span>
-            <div class="activity-time">Hoy 10:23</div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon ai-blue">🏦</div>
-            <div class="activity-info"><h4>Conciliación Bancaria Abril 2026 — Santander</h4><p>3 diferencias detectadas · Reporte exportado a Drive</p></div>
-            <span class="activity-badge ab-done">Completado</span>
-            <div class="activity-time">Ayer 16:45</div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon ai-green">📊</div>
-            <div class="activity-info"><h4>Análisis de Resultados — Marzo 2026</h4><p>Procesando datos financieros adjuntos</p></div>
-            <span class="activity-badge ab-run">En proceso</span>
-            <div class="activity-time">Ayer 09:12</div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon ai-orange">🧾</div>
-            <div class="activity-info"><h4>Carga Masiva — 47 facturas de proveedores</h4><p>2 duplicados detectados · Excel generado</p></div>
-            <span class="activity-badge ab-done">Completado</span>
-            <div class="activity-time">Lun 14:30</div>
-          </div>
+          <div class="activity-item"><div class="activity-icon ai-purple">📜</div><div class="activity-info"><h4>Acta de Directorio — Red Intercable</h4><p>Aprobación EECC 2025</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">Hoy 10:23</div></div>
+          <div class="activity-item"><div class="activity-icon ai-blue">🏦</div><div class="activity-info"><h4>Conciliación Bancaria Abril 2026</h4><p>3 diferencias detectadas</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">Ayer 16:45</div></div>
+          <div class="activity-item"><div class="activity-icon ai-orange">🧾</div><div class="activity-info"><h4>Carga masiva — 47 facturas</h4><p>2 duplicados detectados</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">Lun 14:30</div></div>
         </div>
       </div>
 
-      <!-- ─── AGENTES LIST ───────────────────── -->
+      <!-- AGENTES -->
       <div id="sec-agentes" class="content-section">
-        <div class="section-header" style="margin-bottom:20px">
-          <div class="section-title">Todos los agentes IA</div>
-          <span style="font-size:12px;color:var(--muted)">8 agentes disponibles · Red Intercable</span>
-        </div>
-        <div class="agents-grid">
-          <div class="agent-card" onclick="openAgent('corporativo')"><div class="agent-card-header ah-blue">💬</div><div class="agent-card-body"><span class="agent-tag tag-contable">Chatbot</span><h3>Asistente Corporativo</h3><p>Base documental interna con RAG. Responde preguntas sobre normativa, procedimientos y FAQ.</p><div class="agent-card-footer"><span class="agent-status status-ready"><span class="status-dot"></span>Listo</span><span class="agent-open-btn">Abrir →</span></div></div></div>
-          <div class="agent-card" onclick="openAgent('actas')"><div class="agent-card-header ah-purple">📜</div><div class="agent-card-body"><span class="agent-tag tag-societario">Societario</span><h3>Generador de Actas</h3><p>Actas de directorio, asamblea ordinaria/extraordinaria y reunión de socios con lenguaje legal.</p><div class="agent-card-footer"><span class="agent-status status-ready"><span class="status-dot"></span>Listo</span><span class="agent-open-btn">Abrir →</span></div></div></div>
-          <div class="agent-card" onclick="openAgent('resultados')"><div class="agent-card-header ah-teal">📊</div><div class="agent-card-body"><span class="agent-tag tag-financiero">Financiero</span><h3>Análisis de Resultados</h3><p>Analiza EECC mensuales desde Excel/PDF, detecta anomalías y genera reporte ejecutivo.</p><div class="agent-card-footer"><span class="agent-status status-ready"><span class="status-dot"></span>Listo</span><span class="agent-open-btn">Abrir →</span></div></div></div>
-          <div class="agent-card" onclick="openAgent('soporte')"><div class="agent-card-header ah-pink">🎧</div><div class="agent-card-body"><span class="agent-tag tag-operativo">Soporte</span><h3>Soporte a Mandantes</h3><p>Sistema de tickets con respuestas automáticas, historial completo y seguimiento de consultas.</p><div class="agent-card-footer"><span class="agent-status status-ready"><span class="status-dot"></span>Listo</span><span class="agent-open-btn">Abrir →</span></div></div></div>
-          <div class="agent-card" onclick="openAgent('conciliacion')"><div class="agent-card-header ah-indigo">🏦</div><div class="agent-card-body"><span class="agent-tag tag-contable">Contable</span><h3>Conciliación Bancaria</h3><p>Cruza extractos bancarios (Santander, Galicia, BBVA) con mayor contable y genera informe.</p><div class="agent-card-footer"><span class="agent-status status-ready"><span class="status-dot"></span>Listo</span><span class="agent-open-btn">Abrir →</span></div></div></div>
-          <div class="agent-card" onclick="openAgent('amortizaciones')"><div class="agent-card-header ah-cyan">📉</div><div class="agent-card-body"><span class="agent-tag tag-contable">RT 17 FACPCE</span><h3>Amortizaciones</h3><p>Cuadro de amortizaciones por método lineal, decreciente y suma de dígitos. Export Excel.</p><div class="agent-card-footer"><span class="agent-status status-ready"><span class="status-dot"></span>Listo</span><span class="agent-open-btn">Abrir →</span></div></div></div>
-          <div class="agent-card" onclick="openAgent('pagos')"><div class="agent-card-header ah-orange">💳</div><div class="agent-card-body"><span class="agent-tag tag-financiero">Tesorería</span><h3>Propuesta de Pagos</h3><p>Optimiza pagos semanales a proveedores según disponibilidad de caja, vencimientos y descuentos.</p><div class="agent-card-footer"><span class="agent-status status-ready"><span class="status-dot"></span>Listo</span><span class="agent-open-btn">Abrir →</span></div></div></div>
-          <div class="agent-card" onclick="openAgent('facturas')"><div class="agent-card-header ah-rose">🧾</div><div class="agent-card-body"><span class="agent-tag tag-operativo">Operativo</span><h3>Carga Masiva Facturas</h3><p>Lee PDFs de facturas, extrae CUIT, fecha, importe e IVA, y genera base de datos importable.</p><div class="agent-card-footer"><span class="agent-status status-ready"><span class="status-dot"></span>Listo</span><span class="agent-open-btn">Abrir →</span></div></div></div>
-        </div>
+        <div class="section-header" style="margin-bottom:20px"><div class="section-title">Todos los agentes IA</div></div>
+        <div class="agents-grid" id="allAgentGrid"></div>
       </div>
 
-      <!-- ─── HISTORIAL ──────────────────────── -->
+      <!-- HISTORIAL -->
       <div id="sec-historial" class="content-section">
         <div class="section-title" style="margin-bottom:20px">Historial de sesiones</div>
         <div class="activity-list">
-          <div class="activity-item"><div class="activity-icon ai-purple">📜</div><div class="activity-info"><h4>Acta de Directorio N°142</h4><p>Generador de Actas · Red Intercable · 1.2k tokens</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">07/05 10:23</div></div>
-          <div class="activity-item"><div class="activity-icon ai-blue">🏦</div><div class="activity-info"><h4>Conciliación Santander Abril 2026</h4><p>Conciliación Bancaria · 3 diferencias · $0.18 USD</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">06/05 16:45</div></div>
-          <div class="activity-item"><div class="activity-icon ai-green">📊</div><div class="activity-info"><h4>Análisis EECC Marzo 2026</h4><p>Análisis Mensual · Red Intercable · Reporte PDF</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">06/05 09:12</div></div>
-          <div class="activity-item"><div class="activity-icon ai-orange">🧾</div><div class="activity-info"><h4>Carga masiva — 47 facturas Abril</h4><p>Facturas · 2 duplicados detectados · $0.42 USD</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">05/05 14:30</div></div>
-          <div class="activity-item"><div class="activity-icon ai-blue">💬</div><div class="activity-info"><h4>Consulta alícuotas IIBB Buenos Aires</h4><p>Asistente Corporativo · 5 mensajes</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">05/05 11:00</div></div>
-          <div class="activity-item"><div class="activity-icon ai-green">📉</div><div class="activity-info"><h4>Cuadro amortizaciones Bienes de Uso 2025</h4><p>Amortizaciones RT17 · 12 bienes · Excel + PDF</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">04/05 15:20</div></div>
+          <div class="activity-item"><div class="activity-icon ai-purple">📜</div><div class="activity-info"><h4>Acta de Directorio N°142</h4><p>Generador de Actas · Red Intercable</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">07/05</div></div>
+          <div class="activity-item"><div class="activity-icon ai-blue">🏦</div><div class="activity-info"><h4>Conciliación Santander Abril</h4><p>3 diferencias · $0.18 USD</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">06/05</div></div>
+          <div class="activity-item"><div class="activity-icon ai-green">📊</div><div class="activity-info"><h4>Análisis EECC Marzo 2026</h4><p>Reporte PDF generado</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">06/05</div></div>
         </div>
       </div>
 
-      <!-- ─── DOCUMENTOS ────────────────────── -->
+      <!-- DOCUMENTOS -->
       <div id="sec-documentos" class="content-section">
         <div class="section-title" style="margin-bottom:20px">Documentos generados</div>
         <div class="activity-list">
-          <div class="activity-item"><div class="activity-icon ai-purple">📄</div><div class="activity-info"><h4>Acta-Directorio-Red-Intercable-2026-05.docx</h4><p>Generado hoy · 24 KB · Carpeta: /Red Intercable/Actas/2026/</p></div><div style="display:flex;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">⬇ Descargar</span><span style="font-size:12px;font-weight:600;color:var(--green);cursor:pointer">🔗 Drive</span></div></div>
-          <div class="activity-item"><div class="activity-icon ai-blue">📊</div><div class="activity-info"><h4>Conciliacion-Santander-2026-04.xlsx</h4><p>Ayer · 18 KB · Carpeta: /Red Intercable/Contabilidad/Conciliaciones/</p></div><div style="display:flex;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">⬇ Descargar</span><span style="font-size:12px;font-weight:600;color:var(--green);cursor:pointer">🔗 Drive</span></div></div>
-          <div class="activity-item"><div class="activity-icon ai-green">📑</div><div class="activity-info"><h4>Analisis-Resultados-2026-03.pdf</h4><p>Ayer · 156 KB · Carpeta: /Red Intercable/Análisis/</p></div><div style="display:flex;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">⬇ Descargar</span><span style="font-size:12px;font-weight:600;color:var(--green);cursor:pointer">🔗 Drive</span></div></div>
+          <div class="activity-item"><div class="activity-icon ai-purple">📄</div><div class="activity-info"><h4>Acta-Directorio-2026-05.docx</h4><p>Hoy · /Red Intercable/Actas/2026/</p></div><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">🔗 Drive</span></div>
+          <div class="activity-item"><div class="activity-icon ai-blue">📊</div><div class="activity-info"><h4>Conciliacion-Santander-2026-04.xlsx</h4><p>Ayer · /Red Intercable/Contabilidad/</p></div><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">🔗 Drive</span></div>
+          <div class="activity-item"><div class="activity-icon ai-green">📑</div><div class="activity-info"><h4>Analisis-Resultados-2026-03.pdf</h4><p>Ayer · /Red Intercable/Análisis/</p></div><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">🔗 Drive</span></div>
         </div>
       </div>
 
-      <!-- ─── AGENT DETAIL ──────────────────── -->
+      <!-- AGENT DETAIL -->
       <div id="sec-agent" class="content-section">
         <div class="back-btn" onclick="goBack()">← Volver</div>
         <div id="agentDetailContent"></div>
       </div>
 
-    </div><!-- /content -->
+    </div>
   </main>
-</div><!-- /appScreen -->
+</div>
 
-<!-- PROCESSING OVERLAY -->
+<!-- PROCESSING -->
 <div class="processing-overlay" id="processingOverlay">
   <div class="processing-card">
     <div class="spinner"></div>
@@ -636,24 +384,51 @@ input{font-family:inherit}
 <!-- TOAST -->
 <div class="notification-toast" id="toast">
   <div class="toast-icon">✅</div>
-  <div class="toast-text">
-    <h4 id="toastTitle">Completado</h4>
-    <p id="toastMsg">El documento fue generado y exportado a Drive.</p>
-  </div>
+  <div class="toast-text"><h4 id="toastTitle">Completado</h4><p id="toastMsg">El documento fue generado correctamente.</p></div>
   <span class="toast-close" onclick="hideToast()">✕</span>
 </div>
 
 <script>
-// ── STATE ─────────────────────────────────────────────────
-let currentSection = 'dashboard';
+// ─── PEGÁ TU API KEY AQUÍ ─────────────────────────────────
+const CLAUDE_API_KEY = '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';
+// ──────────────────────────────────────────────────────────
+
 let currentAgent = null;
 let isDark = true;
+let uploadedFiles = {};
 
-// ── LOGIN ─────────────────────────────────────────────────
+const agentList = [
+  {key:'corporativo',icon:'💬',color:'ah-blue',  name:'Asistente Corporativo',  short:'Chat con base documental interna de Geo Tax.',       tag:'Chatbot',   tagClass:'tag-contable',  type:'chat',  steps:['Analizando pregunta...','Buscando en base documental...','Generando respuesta...']},
+  {key:'actas',      icon:'📜',color:'ah-purple',name:'Generador de Actas',     short:'Actas societarias con lenguaje legal argentino.',    tag:'Societario',tagClass:'tag-societario',type:'form',  steps:['Procesando datos...','Aplicando Ley 19.550...','Redactando acta...','Generando documento...']},
+  {key:'resultados', icon:'📊',color:'ah-teal',  name:'Análisis de Resultados', short:'Análisis de EECC con detección de tendencias.',     tag:'Financiero', tagClass:'tag-financiero',type:'upload',steps:['Leyendo archivo...','Calculando variaciones...','Detectando anomalías...','Generando reporte...']},
+  {key:'soporte',    icon:'🎧',color:'ah-pink',  name:'Soporte a Mandantes',    short:'Gestión de consultas y respuestas automáticas.',    tag:'Soporte',   tagClass:'tag-operativo', type:'chat',  steps:['Clasificando consulta...','Generando respuesta...']},
+  {key:'conciliacion',icon:'🏦',color:'ah-indigo',name:'Conciliación Bancaria', short:'Cruza extracto bancario con mayor contable.',        tag:'Contable',  tagClass:'tag-contable',  type:'dual',  steps:['Leyendo extracto bancario...','Leyendo mayor contable...','Cruzando movimientos...','Detectando diferencias...','Generando reporte...']},
+  {key:'amortizaciones',icon:'📉',color:'ah-cyan',name:'Amortizaciones RT 17', short:'Cuadros de amortización según RT 17 FACPCE.',        tag:'RT 17',     tagClass:'tag-contable',  type:'upload',steps:['Leyendo bienes de uso...','Aplicando RT 17...','Calculando amortizaciones...','Generando cuadro...']},
+  {key:'pagos',      icon:'💳',color:'ah-orange',name:'Propuesta de Pagos',     short:'Flujo semanal de pagos a proveedores.',              tag:'Tesorería', tagClass:'tag-financiero',type:'upload',steps:['Analizando facturas...','Evaluando caja...','Priorizando pagos...','Generando propuesta...']},
+  {key:'facturas',   icon:'🧾',color:'ah-rose',  name:'Carga Masiva Facturas',  short:'Extrae datos de PDFs y detecta duplicados.',        tag:'Operativo', tagClass:'tag-operativo', type:'upload',steps:['Procesando archivos...','Extrayendo datos...','Validando CUITs...','Detectando duplicados...']},
+];
+
+function renderAgentGrid(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = agentList.map(a => `
+    <div class="agent-card" onclick="openAgent('${a.key}')">
+      <div class="agent-card-header ${a.color}">${a.icon}</div>
+      <div class="agent-card-body">
+        <span class="agent-tag ${a.tagClass}">${a.tag}</span>
+        <h3>${a.name}</h3><p>${a.short}</p>
+        <div class="agent-card-footer">
+          <span class="agent-status"><span class="status-dot"></span>Listo</span>
+          <span class="agent-open-btn">Abrir →</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+renderAgentGrid('dashAgentGrid');
+renderAgentGrid('allAgentGrid');
+
 function doLogin() {
-  const e = document.getElementById('loginEmail').value;
-  const p = document.getElementById('loginPass').value;
-  if (!e) { alert('Ingresá tu email'); return; }
+  if (!document.getElementById('loginEmail').value) return;
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
 }
@@ -661,381 +436,284 @@ function doLogout() {
   document.getElementById('appScreen').classList.remove('active');
   document.getElementById('loginScreen').classList.add('active');
 }
+document.addEventListener('keydown', e => { if (e.key==='Enter' && document.getElementById('loginScreen').classList.contains('active')) doLogin(); });
 
-// ── NAVIGATION ────────────────────────────────────────────
 function showSection(id, navEl) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-  document.getElementById('sec-' + id).classList.add('active');
-  currentSection = id;
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  if (navEl) navEl.classList.add('active');
-  const titles = {dashboard:'Dashboard',agentes:'Agentes IA',historial:'Historial de sesiones',documentos:'Documentos generados',agent:'Agente'};
+  document.getElementById('sec-'+id).classList.add('active');
+  if (navEl) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); navEl.classList.add('active'); }
+  const titles = {dashboard:'Dashboard',agentes:'Agentes IA',historial:'Historial',documentos:'Documentos',agent:'Agente'};
   document.getElementById('topbarTitle').textContent = titles[id] || id;
 }
-function goBack() {
-  showSection(currentSection === 'agent' ? 'dashboard' : currentSection, null);
+function goBack() { showSection('dashboard', null); uploadedFiles = {}; }
+
+function handleFile(input, slotKey, zoneId) {
+  const file = input.files[0];
+  if (!file) return;
+  const zone = document.getElementById(zoneId);
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    uploadedFiles[slotKey] = { name: file.name, content: e.target.result };
+    if (zone) {
+      zone.classList.add('uploaded');
+      zone.querySelector('h4').textContent = '✅ ' + file.name;
+      zone.querySelector('p').textContent = 'Listo · ' + (file.size/1024).toFixed(1) + ' KB';
+    }
+    showToast('📂 Archivo cargado', file.name + ' listo para procesar.');
+  };
+  reader.readAsText(file);
 }
 
-// ── AGENTS ────────────────────────────────────────────────
-const agents = {
-  corporativo: {
-    icon:'💬', color:'ah-blue', name:'Asistente Corporativo Inteligente',
-    desc:'Responde preguntas usando la base de conocimiento interna de Geo Tax. Usa RAG para citar documentos fuente.',
-    tag:'Chatbot', steps:['Analizando pregunta...','Buscando en base documental...','Generando respuesta fundamentada...'],
-    type:'chat'
-  },
-  actas: {
-    icon:'📜', color:'ah-purple', name:'Generador de Actas Societarias',
-    desc:'Redacta actas con lenguaje legal argentino (Ley 19.550). Genera .docx y PDF listos para firmar.',
-    tag:'Societario', steps:['Procesando datos del acta...','Aplicando normas legales argentinas...','Redactando acta completa...','Generando Word y PDF...'],
-    type:'form',
-    fields:[
-      {id:'tipoActa', label:'Tipo de acta', type:'select', opts:['Acta de Directorio','Acta de Asamblea Ordinaria','Acta de Asamblea Extraordinaria','Reunión de Socios SAS']},
-      {id:'fechaActa', label:'Fecha de la reunión', type:'date'},
-      {id:'participantes', label:'Participantes (nombre y cargo)', type:'textarea', ph:'Ej: Juan García – Presidente; María López – Directora Titular'},
-      {id:'ordenDia', label:'Orden del día', type:'textarea', ph:'Ej: 1. Aprobación EECC al 31/12/2025\n2. Distribución de dividendos\n3. Varios'},
-      {id:'resoluciones', label:'Resoluciones adoptadas', type:'textarea', ph:'Describí brevemente qué se resolvió en cada punto...'},
-    ],
-    sampleOutput: `ACTA DE DIRECTORIO N° 143
+function usePastedText(slotKey, textareaId) {
+  const val = document.getElementById(textareaId).value.trim();
+  if (!val) { showToast('⚠️ Sin contenido','Escribí o pegá texto primero.'); return; }
+  uploadedFiles[slotKey] = { name: 'texto pegado', content: val };
+  showToast('✅ Texto cargado', 'Contenido registrado correctamente.');
+}
 
-En la ciudad de Buenos Aires, Zona Norte, a los SIETE (7) días del mes de MAYO de 2026, siendo las 10:00 horas, se reúnen los miembros del Directorio de RED INTERCABLE S.A.S. (CUIT: 30-XXXXXXXX-X).
-
-ASISTENTES: Marcos Bernasconi – Presidente; [demás participantes]
-
-ORDEN DEL DÍA:
-1°) Aprobación de Estados Contables ejercicio 2025.
-2°) Varios.
-
-DELIBERACIONES Y RESOLUCIONES:
-PUNTO 1°: Se ponen a consideración los Estados Contables correspondientes al ejercicio económico cerrado el 31 de diciembre de 2025, junto con la Memoria del Directorio e Informe del Síndico. Luego de su análisis, por unanimidad SE RESUELVE: Aprobar los Estados Contables del ejercicio 2025.
-
-No habiendo más asuntos que tratar, siendo las 11:30 horas, se levanta la sesión, labrándose la presente acta, que leída y hallada conforme, es firmada por los asistentes.
-
-____________________          ____________________
-Marcos Bernasconi                [Secretario del Acta]
-Presidente`
-  },
-  resultados: {
-    icon:'📊', color:'ah-teal', name:'Análisis de Resultados Mensuales',
-    desc:'Analiza EECC desde Excel o PDF, detecta tendencias y genera reporte ejecutivo con insights automáticos.',
-    tag:'Financiero', steps:['Leyendo archivo financiero...','Calculando variaciones y tendencias...','Detectando anomalías...','Generando reporte ejecutivo...','Exportando a Drive...'],
-    type:'upload',
-    sampleOutput:`📊 ANÁLISIS DE RESULTADOS — ABRIL 2026
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-RESUMEN EJECUTIVO:
-Los resultados de Abril muestran una mejora del 12.4% respecto a Marzo. Los ingresos operativos alcanzaron $4.2M con un margen bruto del 38.6%.
-
-✅ PUNTOS POSITIVOS:
-• Ingresos totales: $4.234.000 (+12.4% MoM)
-• EBITDA: $890.000 (margen 21%)
-• Reducción de gastos operativos: -8.3%
-
-⚠️  ALERTAS DETECTADAS:
-• Costo de mercadería vendida +15.2% (revisar)
-• Deudores a cobrar +22% (evaluar política de crédito)
-
-📈 TENDENCIA 3 MESES: Crecimiento sostenido en ingresos con leve presión sobre márgenes. Recomendado revisar estructura de costos en Q3.`
-  },
-  soporte:{icon:'🎧',color:'ah-pink',name:'Soporte a Mandantes',desc:'Centraliza consultas, genera respuestas automáticas y gestiona tickets con seguimiento completo.',tag:'Soporte',steps:['Clasificando consulta...','Buscando respuestas similares...','Generando propuesta de respuesta...'],type:'chat'},
-  conciliacion:{
-    icon:'🏦',color:'ah-indigo',name:'Conciliación Bancaria',
-    desc:'Cruza extracto bancario con mayor contable, detecta diferencias y genera Excel conciliado más reporte PDF.',
-    tag:'Contable',steps:['Leyendo extracto bancario...','Leyendo mayor contable...','Cruzando movimientos...','Identificando diferencias...','Generando reporte Excel y PDF...'],
-    type:'upload2',
-    sampleOutput:`🏦 CONCILIACIÓN BANCARIA — SANTANDER ABRIL 2026
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SALDO SEGÚN EXTRACTO:     $  1.245.680,45
-SALDO SEGÚN MAYOR:        $  1.238.920,30
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DIFERENCIA TOTAL:         $      6.760,15
-
-DIFERENCIAS IDENTIFICADAS (3):
-┌──────────────────────────────────────────────┐
-│ 1. Comisión bancaria no contabilizada        │
-│    Fecha: 25/04  |  Importe: $3.450,00       │
-│ 2. Retención IIGG pendiente de imputar       │
-│    Fecha: 28/04  |  Importe: $2.100,00       │
-│ 3. Diferencia de redondeo en TC              │
-│    Importe: $1.210,15                        │
-└──────────────────────────────────────────────┘
-
-✅ 247 movimientos conciliados correctamente
-📁 Excel con código de colores generado
-📤 Exportado a: /Red Intercable/Conciliaciones/2026-04/`
-  },
-  amortizaciones:{
-    icon:'📉',color:'ah-cyan',name:'Amortizaciones RT 17 FACPCE',
-    desc:'Calcula cuadro de amortizaciones bajo RT 17 por método lineal, decreciente o suma de dígitos.',
-    tag:'RT 17 FACPCE',steps:['Leyendo listado de bienes...','Aplicando método seleccionado...','Calculando cuotas de amortización...','Generando cuadro completo...','Exportando Excel y asiento contable...'],
-    type:'upload',
-    sampleOutput:`📉 CUADRO DE AMORTIZACIONES — MÉTODO LINEAL — 2026
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-BIEN                    VALOR    VU   CUOTA/AÑO   AMORT.ACUM   VALOR RESID.
-─────────────────────────────────────────────────────────────────────────
-Rodado Toyota Hilux   $850.000   5   $170.000     $340.000      $510.000
-Servidor HP ProLiant  $420.000  10    $42.000      $84.000      $336.000
-Muebles y útiles      $180.000  10    $18.000      $54.000      $126.000
-Software contable      $95.000   3    $31.667      $63.334       $31.666
-─────────────────────────────────────────────────────────────────────────
-TOTALES             $1.545.000       $261.667     $541.334    $1.003.666
-
-ASIENTO CONTABLE SUGERIDO:
-  Amortizaciones del ejercicio      261.667
-      a Amortización acumulada                261.667`
-  },
-  pagos:{
-    icon:'💳',color:'ah-orange',name:'Propuesta de Pagos a Proveedores',
-    desc:'Optimiza el flujo de pagos semanales priorizando por vencimiento, descuentos y disponibilidad de caja.',
-    tag:'Tesorería',steps:['Analizando facturas pendientes...','Evaluando disponibilidad de caja...','Priorizando por vencimiento y descuento...','Generando propuesta semanal...'],
-    type:'upload',
-    sampleOutput:`💳 PROPUESTA DE PAGOS — SEMANA 19 (06/05 al 10/05)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SALDO DISPONIBLE ESTIMADO:   $  2.850.000
-
-PAGOS PRIORITARIOS (vence esta semana):
-🔴 Proveedor Telecom SA         $    245.000  — vence 07/05 (URGENTE)
-🔴 Alquiler oficina norte       $    180.000  — vence 08/05
-🟡 Papelería El Orden           $     42.300  — vence 09/05
-
-PAGOS RECOMENDADOS (descuento por pronto pago):
-🟢 Dist. Técnica SRL  $185.000  → paga antes 08/05 = 3% dto = $5.550 ahorro
-
-PAGOS A DIFERIR (sin vencimiento crítico):
-⚪ Servicios de limpieza         $     38.000  — puede postergarse a semana 20
-⚪ Mantenimiento equipos         $     95.000  — puede postergarse a semana 20
-
-TOTAL PROPUESTA SEMANA 19:   $   652.300
-SALDO PROYECTADO AL CIERRE:  $ 2.197.700`
-  },
-  facturas:{
-    icon:'🧾',color:'ah-rose',name:'Carga Masiva de Facturas',
-    desc:'Lee PDFs de facturas, extrae CUIT, fecha, importe e IVA automáticamente. Detecta duplicados.',
-    tag:'Operativo',steps:['Procesando PDFs adjuntos...','Extrayendo datos con OCR...','Validando CUITs contra AFIP...','Detectando duplicados...','Generando Excel importable...'],
-    type:'multi',
-    sampleOutput:`🧾 CARGA MASIVA — RESULTADO PROCESAMIENTO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-✅ FACTURAS PROCESADAS CORRECTAMENTE: 45
-⚠️  DUPLICADOS DETECTADOS: 2
-❌ ERRORES / DATOS INCOMPLETOS: 0
-
-MUESTRA DE DATOS EXTRAÍDOS:
-#  PROVEEDOR              CUIT          FC N°      FECHA     NETO       IVA      TOTAL
-─────────────────────────────────────────────────────────────────────────────────────
-1  Telecom Argentina SA  30-67927421-3  A-0001-125678  02/05  $198.347  $41.652  $240.000
-2  Servicios Tech SRL    30-71234567-8  A-0001-004521  03/05   $82.644  $17.355   $99.999
-3  Dist. Norte SA        30-58741236-4  B-0001-987654  03/05   $45.000   $9.450   $54.450
-
-⚠️  DUPLICADOS (no procesados):
-• Factura A-0001-004521 de Servicios Tech SRL ya existe en sistema (05/04)
-
-📁 Excel importable generado (formato compatible con Tango Gestión)
-📤 Exportado a: /Red Intercable/Facturas/2026-05/`
-  }
-};
+function togglePaste(id) { document.getElementById(id).classList.toggle('show'); }
 
 function openAgent(key) {
   currentAgent = key;
-  const a = agents[key];
+  uploadedFiles = {};
+  const a = agentList.find(x => x.key === key);
   if (!a) return;
-  let html = `
-    <div class="agent-detail-header">
-      <div class="agent-detail-icon ${a.color}">${a.icon}</div>
-      <div class="agent-detail-info">
-        <h2>${a.name}</h2>
-        <p>${a.desc}</p>
-      </div>
-      <div class="agent-detail-meta">
-        <div class="status-pill"><span class="status-dot" style="background:var(--green)"></span>Listo para usar</div>
-        <p>Powered by Claude Sonnet</p>
-      </div>
-    </div>
-    <div class="agent-workspace">
-      <div class="workspace-left">`;
+
+  let left = '';
 
   if (a.type === 'chat') {
-    html += `
-      <div class="panel">
-        <div class="panel-header"><h3>💬 Chat con el agente</h3></div>
-        <div class="panel-body">
-          <div id="chatMessages" style="min-height:200px;max-height:360px;overflow-y:auto;margin-bottom:16px;display:flex;flex-direction:column;gap:12px;">
-            <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;color:var(--muted)">
-              <strong style="color:var(--accent)">🤖 Asistente:</strong> Hola Marcos, soy el asistente corporativo de Geo Tax. Podés consultarme sobre normativa tributaria, procedimientos internos, alícuotas de IIBB, Monotributo, Bienes Personales y cualquier tema de nuestra base de conocimiento. ¿En qué te puedo ayudar?
-            </div>
-          </div>
-          <div style="display:flex;gap:8px">
-            <input id="chatInput" type="text" placeholder="Escribí tu consulta..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13.5px;color:var(--text);outline:none;font-family:inherit" onkeydown="if(event.key==='Enter')sendChat()">
-            <button onclick="sendChat()" style="background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;font-size:13px;font-weight:600">Enviar</button>
-          </div>
-        </div>
-      </div>`;
+    left = `<div class="panel"><div class="panel-header"><h3>💬 Chat con el agente</h3></div><div class="panel-body">
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg-bot"><strong style="color:var(--accent)">🤖 Asistente:</strong> Hola Marcos, soy el asistente de Geo Tax. ¿En qué te puedo ayudar hoy?</div>
+      </div>
+      <div class="chat-input-row">
+        <input id="chatInput" type="text" placeholder="Escribí tu consulta..." onkeydown="if(event.key==='Enter')sendChat('${key}')">
+        <button class="chat-send-btn" onclick="sendChat('${key}')">Enviar</button>
+      </div>
+    </div></div>`;
+
   } else if (a.type === 'form') {
-    html += `<div class="panel"><div class="panel-header"><h3>📝 Datos del acta</h3></div><div class="panel-body">`;
-    a.fields.forEach(f => {
-      html += `<div class="input-group"><label>${f.label}</label>`;
-      if (f.type === 'select') {
-        html += `<select id="${f.id}">` + f.opts.map(o=>`<option>${o}</option>`).join('') + `</select>`;
-      } else if (f.type === 'textarea') {
-        html += `<textarea id="${f.id}" placeholder="${f.ph||''}" rows="3"></textarea>`;
-      } else {
-        html += `<input type="${f.type}" id="${f.id}">`;
-      }
-      html += `</div>`;
-    });
-    html += `</div></div>`;
-  } else if (a.type === 'upload2') {
-    html += `
-      <div class="panel"><div class="panel-header"><h3>📂 Archivos a conciliar</h3></div><div class="panel-body">
-        <div class="input-group"><label>Extracto bancario (PDF o Excel)</label><div class="upload-zone" onclick="fakeUpload('ext')"><div class="upload-icon">🏦</div><h4>Arrastrá el extracto bancario aquí</h4><p>PDF o Excel · Santander, Galicia, BBVA, Macro, Nación</p></div></div>
-        <div class="input-group"><label>Mayor contable (Excel o CSV)</label><div class="upload-zone" onclick="fakeUpload('may')"><div class="upload-icon">📊</div><h4>Arrastrá el mayor contable aquí</h4><p>Excel o CSV · cualquier formato</p></div></div>
-      </div></div>`;
-  } else if (a.type === 'multi') {
-    html += `
-      <div class="panel"><div class="panel-header"><h3>📂 Facturas a procesar</h3></div><div class="panel-body">
-        <div class="upload-zone" onclick="fakeUpload('fact')" style="min-height:160px">
-          <div class="upload-icon">🧾</div>
-          <h4>Arrastrá múltiples PDFs aquí</h4>
-          <p>Podés subir hasta 100 facturas a la vez · Formato PDF</p>
+    left = `<div class="panel"><div class="panel-header"><h3>📝 Datos del acta</h3></div><div class="panel-body">
+      <div class="input-group"><label>Tipo de acta</label>
+        <select id="tipoActa"><option>Acta de Directorio</option><option>Acta de Asamblea Ordinaria</option><option>Acta de Asamblea Extraordinaria</option><option>Reunión de Socios SAS</option></select>
+      </div>
+      <div class="input-group"><label>Fecha de la reunión</label><input type="date" id="fechaActa"></div>
+      <div class="input-group"><label>Participantes</label><textarea id="participantes" placeholder="Juan García – Presidente; María López – Directora Titular"></textarea></div>
+      <div class="input-group"><label>Orden del día</label><textarea id="ordenDia" placeholder="1. Aprobación EECC 2025&#10;2. Distribución de resultados&#10;3. Varios"></textarea></div>
+      <div class="input-group"><label>Resoluciones adoptadas</label><textarea id="resoluciones" placeholder="Describí qué se resolvió en cada punto..."></textarea></div>
+    </div></div>
+    <div class="panel"><div class="panel-header"><h3>📄 Resultado</h3></div><div class="panel-body">
+      <div class="output-box" id="outputBox">El acta aparecerá aquí...</div>
+      <div class="output-actions" id="outputActions" style="display:none">
+        <button class="out-btn" onclick="copyOutput()">📋 Copiar</button>
+        <button class="out-btn" onclick="downloadOutput('acta')">⬇ Descargar</button>
+      </div>
+    </div></div>`;
+
+  } else if (a.type === 'dual') {
+    left = `<div class="panel"><div class="panel-header"><h3>📂 Archivos para conciliar</h3></div><div class="panel-body">
+      <div class="file-hint"><strong>💡 Formatos aceptados: CSV o TXT</strong>
+      Si tenés Excel: abrilo → Archivo → Guardar como → CSV UTF-8. Si tenés PDF del banco: copiá el texto y usá la opción "Pegar texto" abajo.</div>
+      <div class="input-group"><label>Extracto bancario</label>
+        <div class="upload-zone" id="zone-ext">
+          <input type="file" accept=".csv,.txt,.tsv" onchange="handleFile(this,'extracto','zone-ext')">
+          <div class="upload-icon">🏦</div>
+          <h4>Clic o arrastrá el extracto bancario</h4>
+          <p>CSV o TXT · Santander, Galicia, BBVA, Macro, Nación</p>
         </div>
-        <div id="uploadedFiles" style="margin-top:12px"></div>
-      </div></div>`;
+        <span class="paste-toggle" onclick="togglePaste('paste-ext')">¿Preferís pegar el texto? →</span>
+        <div class="paste-area" id="paste-ext">
+          <textarea id="pasteExt" placeholder="Pegá aquí el contenido del extracto bancario..." rows="5" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text);outline:none;resize:vertical;margin-top:8px"></textarea>
+          <button onclick="usePastedText('extracto','pasteExt')" style="margin-top:8px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">✓ Usar este texto</button>
+        </div>
+      </div>
+      <div class="input-group"><label>Mayor contable</label>
+        <div class="upload-zone" id="zone-may">
+          <input type="file" accept=".csv,.txt,.tsv" onchange="handleFile(this,'mayor','zone-may')">
+          <div class="upload-icon">📊</div>
+          <h4>Clic o arrastrá el mayor contable</h4>
+          <p>CSV o TXT · cualquier sistema contable</p>
+        </div>
+        <span class="paste-toggle" onclick="togglePaste('paste-may')">¿Preferís pegar el texto? →</span>
+        <div class="paste-area" id="paste-may">
+          <textarea id="pasteMay" placeholder="Pegá aquí el contenido del mayor contable..." rows="5" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text);outline:none;resize:vertical;margin-top:8px"></textarea>
+          <button onclick="usePastedText('mayor','pasteMay')" style="margin-top:8px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">✓ Usar este texto</button>
+        </div>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header"><h3>📄 Resultado</h3></div><div class="panel-body">
+      <div class="output-box" id="outputBox">El reporte de conciliación aparecerá aquí...</div>
+      <div class="output-actions" id="outputActions" style="display:none">
+        <button class="out-btn" onclick="copyOutput()">📋 Copiar</button>
+        <button class="out-btn" onclick="downloadOutput('conciliacion')">⬇ Descargar</button>
+      </div>
+    </div></div>`;
+
   } else {
-    html += `
-      <div class="panel"><div class="panel-header"><h3>📂 Subir archivo</h3></div><div class="panel-body">
-        <div class="upload-zone" onclick="fakeUpload('gen')">
-          <div class="upload-icon">📁</div>
-          <h4>Arrastrá tu archivo aquí</h4>
-          <p>Excel, CSV o PDF · máx. 50 MB</p>
-        </div>
-      </div></div>`;
-  }
-
-  if (a.type !== 'chat') {
-    html += `
-      <div class="panel">
-        <div class="panel-header"><h3>📄 Resultado</h3><div style="display:flex;gap:6px" id="outputActionsTop"></div></div>
-        <div class="panel-body">
-          <div class="output-box" id="outputBox">El resultado aparecerá aquí una vez procesado...</div>
-          <div class="output-actions" id="outputActions" style="display:none">
-            <button class="out-btn" onclick="showToast('Descargando...','Archivo guardado en tu computadora.')">⬇ Descargar Excel</button>
-            <button class="out-btn" onclick="showToast('Descargando...','PDF generado correctamente.')">⬇ Descargar PDF</button>
-            <button class="out-btn" onclick="showToast('✅ Exportado a Drive','Archivo guardado en Google Drive.')">🔗 Exportar a Drive</button>
-          </div>
-        </div>
-      </div>`;
-  }
-
-  html += `</div><div class="workspace-right">`;
-  if (a.type !== 'chat') {
-    html += `
-      <div class="panel">
-        <div class="panel-header"><h3>🚀 Ejecutar</h3></div>
-        <div class="panel-body">
-          <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.6">Completá los datos y hacé clic en el botón para procesar con Claude AI.</p>
-          <button class="run-btn" id="runBtn" onclick="runAgent('${key}')">
-            ✨ Procesar con IA
-          </button>
-          <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">Estimado: 15-45 segundos</p>
-        </div>
-      </div>`;
-  }
-  html += `
-    <div class="panel">
-      <div class="panel-header"><h3>📂 Historial reciente</h3></div>
-      <div class="panel-body">
-        <div class="history-item"><div class="hist-icon">${a.icon}</div><div class="hist-info"><h5>${a.name.split(' ').slice(0,3).join(' ')} — Abril</h5><p>Hace 2 días · Completado</p></div><span class="hist-dl">⬇ Ver</span></div>
-        <div class="history-item"><div class="hist-icon">${a.icon}</div><div class="hist-info"><h5>${a.name.split(' ').slice(0,3).join(' ')} — Marzo</h5><p>Hace 5 días · Completado</p></div><span class="hist-dl">⬇ Ver</span></div>
-        <div class="history-item"><div class="hist-icon">${a.icon}</div><div class="hist-info"><h5>${a.name.split(' ').slice(0,3).join(' ')} — Febrero</h5><p>Hace 12 días · Completado</p></div><span class="hist-dl">⬇ Ver</span></div>
+    left = `<div class="panel"><div class="panel-header"><h3>📂 Subir archivo</h3></div><div class="panel-body">
+      <div class="file-hint"><strong>💡 Formatos aceptados: CSV o TXT</strong>
+      Si tenés Excel exportá a CSV: Archivo → Guardar como → CSV.</div>
+      <div class="upload-zone" id="zone-gen">
+        <input type="file" accept=".csv,.txt,.tsv" onchange="handleFile(this,'archivo','zone-gen')">
+        <div class="upload-icon">📁</div>
+        <h4>Clic o arrastrá tu archivo aquí</h4>
+        <p>CSV o TXT · máx. 50 MB</p>
       </div>
+      <span class="paste-toggle" onclick="togglePaste('paste-gen')">¿Preferís pegar el texto? →</span>
+      <div class="paste-area" id="paste-gen">
+        <textarea id="pasteGen" placeholder="Pegá aquí el contenido del archivo..." rows="6" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text);outline:none;resize:vertical;margin-top:8px"></textarea>
+        <button onclick="usePastedText('archivo','pasteGen')" style="margin-top:8px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">✓ Usar este texto</button>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header"><h3>📄 Resultado</h3></div><div class="panel-body">
+      <div class="output-box" id="outputBox">El resultado aparecerá aquí...</div>
+      <div class="output-actions" id="outputActions" style="display:none">
+        <button class="out-btn" onclick="copyOutput()">📋 Copiar</button>
+        <button class="out-btn" onclick="downloadOutput(currentAgent)">⬇ Descargar</button>
+      </div>
+    </div></div>`;
+  }
+
+  const right = `
+    ${a.type !== 'chat' ? `<div class="panel"><div class="panel-header"><h3>🚀 Ejecutar</h3></div><div class="panel-body">
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.6">Cargá los archivos y hacé clic para procesar con Claude AI.</p>
+      <button class="run-btn" onclick="runAgent('${key}')">✨ Procesar con IA</button>
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">Estimado: 15–45 segundos</p>
+    </div></div>` : ''}
+    <div class="panel"><div class="panel-header"><h3>ℹ️ Sobre este agente</h3></div><div class="panel-body">
+      <div style="display:grid;gap:8px;font-size:12px">
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Modelo</span><span style="font-weight:600">Claude Haiku 4.5</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Categoría</span><span style="font-weight:600">${a.tag}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Historial</span><span style="font-weight:600;color:var(--green)">✓ Guardado</span></div>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header"><h3>📂 Historial reciente</h3></div><div class="panel-body">
+      <div class="history-item"><div class="hist-icon">${a.icon}</div><div class="hist-info"><h5>${a.name} — Abril</h5><p>Hace 2 días · Completado</p></div><span class="hist-dl">Ver</span></div>
+      <div class="history-item"><div class="hist-icon">${a.icon}</div><div class="hist-info"><h5>${a.name} — Marzo</h5><p>Hace 5 días · Completado</p></div><span class="hist-dl">Ver</span></div>
+    </div></div>`;
+
+  document.getElementById('agentDetailContent').innerHTML = `
+    <div class="agent-detail-header">
+      <div class="agent-detail-icon ${a.color}">${a.icon}</div>
+      <div class="agent-detail-info"><h2>${a.name}</h2><p>${a.short}</p></div>
+      <div class="agent-detail-meta"><div class="status-pill"><span class="status-dot"></span>Listo para usar</div><p style="font-size:11px;color:var(--muted)">Powered by Claude AI</p></div>
     </div>
-    <div class="panel">
-      <div class="panel-header"><h3>ℹ️ Acerca del agente</h3></div>
-      <div class="panel-body">
-        <div style="display:grid;gap:8px;font-size:12px">
-          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Modelo IA</span><span style="font-weight:600">Claude Sonnet 4.5</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Categoria</span><span style="font-weight:600">${a.tag}</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Export Drive</span><span style="font-weight:600;color:var(--green)">✓ Automático</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Historial</span><span style="font-weight:600;color:var(--green)">✓ Guardado</span></div>
-        </div>
-      </div>
-    </div>`;
-  html += `</div></div>`;
+    <div class="agent-workspace"><div class="workspace-left">${left}</div><div class="workspace-right">${right}</div></div>`;
 
-  document.getElementById('agentDetailContent').innerHTML = html;
   showSection('agent', null);
   document.getElementById('topbarTitle').textContent = a.name;
 }
 
-function runAgent(key) {
-  const a = agents[key];
+function buildPrompt(key) {
+  const ext = uploadedFiles['extracto'] ? '\n\nEXTRACTO BANCARIO:\n' + uploadedFiles['extracto'].content : '';
+  const may = uploadedFiles['mayor']    ? '\n\nMAYOR CONTABLE:\n'    + uploadedFiles['mayor'].content    : '';
+  const arc = uploadedFiles['archivo']  ? '\n\nDATOS DEL ARCHIVO:\n' + uploadedFiles['archivo'].content  : '';
+
+  const map = {
+    actas: () => {
+      const tipo = document.getElementById('tipoActa')?.value || 'Acta de Directorio';
+      const fecha = document.getElementById('fechaActa')?.value || 'hoy';
+      const part = document.getElementById('participantes')?.value || 'Marcos Bernasconi – Presidente';
+      const ord  = document.getElementById('ordenDia')?.value || '1. Aprobación EECC';
+      const res  = document.getElementById('resoluciones')?.value || 'Se aprueba por unanimidad.';
+      return `Sos el generador de actas de Geo Tax SAS. Redactá una ${tipo} para RED INTERCABLE S.A.S., fecha ${fecha}, con lenguaje legal argentino según Ley 19.550. PARTICIPANTES: ${part}. ORDEN DEL DÍA: ${ord}. RESOLUCIONES: ${res}. Generá el acta completa con apertura, desarrollo y cierre con espacio para firmas.`;
+    },
+    conciliacion: () => `Sos el agente de conciliación bancaria de Geo Tax SAS. Realizá la conciliación entre el extracto bancario y el mayor contable de Red Intercable. Identificá todas las diferencias, calculá el saldo conciliado y generá un reporte detallado con: saldo según extracto, saldo según mayor, diferencias encontradas (con fecha, descripción e importe) y total de movimientos conciliados correctamente.${ext}${may}`,
+    resultados:   () => `Sos el agente de análisis financiero de Geo Tax SAS. Analizá los datos financieros de Red Intercable y generá un reporte ejecutivo con: resumen ejecutivo, variaciones vs período anterior, puntos positivos, alertas detectadas y tendencia. Formato profesional.${arc}`,
+    amortizaciones:()=>`Sos el agente de amortizaciones de Geo Tax SAS, experto en RT 17 FACPCE. Procesá el listado de bienes de uso y generá un cuadro de amortizaciones completo por método lineal con: bien, valor de origen, vida útil, cuota anual, amortización acumulada y valor residual. Incluí el asiento contable sugerido.${arc}`,
+    pagos:        () => `Sos el agente de tesorería de Geo Tax SAS. Analizá las facturas de Red Intercable y generá una propuesta de pagos semanal optimizada priorizando vencimientos y descuentos. Indicá pagos urgentes, recomendados y diferibles con importes y fechas.${arc}`,
+    facturas:     () => `Sos el agente de procesamiento de facturas de Geo Tax SAS. Procesá el listado de facturas de Red Intercable. Generá una tabla con: número, proveedor, CUIT, fecha, neto, IVA y total. Detectá duplicados y errores. Indicá el total procesado.${arc}`,
+    soporte:      () => `Sos el asistente de Geo Tax SAS. Respondé esta consulta de Red Intercable de forma profesional: ${document.getElementById('chatInput')?.value || '¿Cuáles son los vencimientos impositivos de este mes?'}`,
+    corporativo:  () => `Sos el asistente de Geo Tax SAS, experto en impuestos y contabilidad argentina. Respondé esta consulta de forma clara y precisa: ${document.getElementById('chatInput')?.value || '¿Cuáles son las alícuotas de IIBB para servicios en Buenos Aires?'}`,
+  };
+  return (map[key] || map.corporativo)();
+}
+
+async function runAgent(key) {
+  const a = agentList.find(x => x.key === key);
   const overlay = document.getElementById('processingOverlay');
   const stepsEl = document.getElementById('processingSteps');
   stepsEl.innerHTML = a.steps.map(s => `<div class="p-step"><div class="p-dot"></div><span>${s}</span></div>`).join('');
   overlay.classList.add('show');
   let i = 0;
   const steps = stepsEl.querySelectorAll('.p-step');
-  function nextStep() {
-    if (i > 0) steps[i-1].classList.remove('active-step'), steps[i-1].classList.add('done');
-    if (i < steps.length) { steps[i].classList.add('active-step'); i++; setTimeout(nextStep, 900); }
-    else {
-      setTimeout(() => {
-        overlay.classList.remove('show');
-        const ob = document.getElementById('outputBox');
-        if (ob) { ob.textContent = a.sampleOutput || 'Proceso completado exitosamente.'; ob.classList.add('has-content'); }
-        const oa = document.getElementById('outputActions');
-        if (oa) oa.style.display = 'flex';
-        showToast('✅ ¡Proceso completado!', 'Resultado generado y exportado a Google Drive.');
-      }, 400);
-    }
+  function animateSteps() {
+    if (i > 0) { steps[i-1].classList.remove('active-step'); steps[i-1].classList.add('done'); }
+    if (i < steps.length - 1) { steps[i].classList.add('active-step'); i++; setTimeout(animateSteps, 800); }
+    else { steps[i].classList.add('active-step'); }
   }
-  nextStep();
+  animateSteps();
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true'
+      },
+      body: JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:2048, messages:[{role:'user',content:buildPrompt(key)}] })
+    });
+    const data = await response.json();
+    overlay.classList.remove('show');
+    const ob = document.getElementById('outputBox');
+    if (ob) { ob.textContent = data.content?.[0]?.text || 'Error: ' + JSON.stringify(data.error); ob.classList.add('has-content'); }
+    const oa = document.getElementById('outputActions');
+    if (oa) oa.style.display = 'flex';
+    showToast('✅ ¡Completado!', 'Resultado generado por Claude AI.');
+  } catch(err) {
+    overlay.classList.remove('show');
+    const ob = document.getElementById('outputBox');
+    if (ob) ob.textContent = 'Error: ' + err.message;
+    showToast('❌ Error', 'No se pudo conectar con Claude API.');
+  }
 }
 
-// Chat
-const chatResponses = {
-  default: 'Basándome en la documentación interna de Geo Tax, puedo responderte que esta consulta está contemplada en nuestros procedimientos. Te recomiendo revisar también la RG AFIP correspondiente para el período vigente.',
-  iibb: 'Para Red Intercable en Buenos Aires, las alícuotas de IIBB aplicables son: Servicios de telecomunicaciones (código 6110) → 4.0% desde Enero 2026 según resolución ARBA 02/2026. Si tenés más de $50M de ingresos anuales, podrías estar sujeto a convenio multilateral.',
-  monotributo: 'El Monotributo tiene 13 categorías para 2026 (A a K). Los límites de facturación van desde $6.45M (Cat A) hasta $68.24M (Cat K). Las cuotas van de $5.180 a $62.440 por mes incluyendo componente impositivo, obra social y jubilación.',
-  factura: 'Para emitir facturas electrónicas en AFIP necesitás: CUIT activo, clave fiscal nivel 3, adherirte al servicio Comprobantes en Línea o usar un software de facturación integrado. El CAE (Código de Autorización Electrónica) se obtiene en tiempo real.'
-};
-function sendChat() {
+async function sendChat(key) {
   const inp = document.getElementById('chatInput');
   const msg = inp.value.trim();
   if (!msg) return;
   const msgs = document.getElementById('chatMessages');
-  msgs.innerHTML += `<div style="background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;margin-left:20%"><strong style="color:var(--text)">Vos:</strong> ${msg}</div>`;
+  msgs.innerHTML += `<div class="msg-user"><strong>Vos:</strong> ${msg}</div>`;
   inp.value = '';
-  setTimeout(() => {
-    let resp = chatResponses.default;
-    const ml = msg.toLowerCase();
-    if (ml.includes('iibb') || ml.includes('ingresos brutos')) resp = chatResponses.iibb;
-    if (ml.includes('monotributo')) resp = chatResponses.monotributo;
-    if (ml.includes('factura') || ml.includes('cae') || ml.includes('afip')) resp = chatResponses.factura;
-    msgs.innerHTML += `<div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;margin-right:20%"><strong style="color:var(--accent)">🤖 Asistente:</strong> ${resp}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  msgs.innerHTML += `<div class="msg-bot" id="typing"><em style="color:var(--muted)">Claude está escribiendo...</em></div>`;
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':CLAUDE_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
+      body: JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1024,messages:[{role:'user',content:`Sos el asistente de Geo Tax SAS, experto en contabilidad e impuestos argentinos. Respondé de forma clara y profesional: ${msg}`}]})
+    });
+    const data = await response.json();
+    document.getElementById('typing')?.remove();
+    msgs.innerHTML += `<div class="msg-bot"><strong style="color:var(--accent)">🤖 Asistente:</strong> ${data.content?.[0]?.text || 'Error en la respuesta.'}</div>`;
     msgs.scrollTop = msgs.scrollHeight;
-  }, 900);
+  } catch(err) {
+    document.getElementById('typing')?.remove();
+    msgs.innerHTML += `<div class="msg-bot" style="color:var(--red)">Error: ${err.message}</div>`;
+  }
 }
 
-function fakeUpload(t) {
-  const files = {ext:'extracto_santander_abril2026.pdf',may:'mayor_contable_abril.xlsx',gen:'datos_financieros.xlsx',fact:'facturas_abril_2026.zip'};
-  const f = files[t] || 'archivo.pdf';
-  const el = document.querySelector('.upload-zone');
-  if (el) { el.style.borderColor='var(--green)'; el.innerHTML = `<div class="upload-icon">✅</div><h4>${f}</h4><p>Archivo listo para procesar</p>`; }
+function copyOutput() {
+  const txt = document.getElementById('outputBox')?.textContent;
+  if (txt) { navigator.clipboard.writeText(txt); showToast('📋 Copiado','Texto copiado al portapapeles.'); }
+}
+function downloadOutput(name) {
+  const txt = document.getElementById('outputBox')?.textContent;
+  if (!txt) return;
+  const a = document.createElement('a');
+  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt);
+  a.download = (name||'resultado') + '_geotax.txt';
+  a.click();
+  showToast('⬇ Descargado','Archivo guardado.');
 }
 
-// THEME
 function toggleTheme() {
   isDark = !isDark;
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
   document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('themeLabel').textContent = isDark ? 'Modo claro' : 'Modo oscuro';
 }
-
-// TOAST
 function showToast(title, msg) {
   document.getElementById('toastTitle').textContent = title;
   document.getElementById('toastMsg').textContent = msg;
@@ -1044,9 +722,6 @@ function showToast(title, msg) {
   setTimeout(() => t.classList.remove('show'), 4000);
 }
 function hideToast() { document.getElementById('toast').classList.remove('show'); }
-
-// Enter key on login
-document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('loginScreen').classList.contains('active')) doLogin(); });
 </script>
 </body>
 </html>
