@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoTax × Red Intercable — Portal IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F172A;--surface:#1E293B;--surface2:#263348;--border:#334155;
+  --text:#F1F5F9;--muted:#94A3B8;--accent:#3B82F6;--accent2:#2563EB;
+  --green:#10B981;--orange:#F59E0B;--red:#EF4444;--radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
+}
+[data-theme="light"]{
+  --bg:#F1F5F9;--surface:#FFFFFF;--surface2:#F8FAFC;--border:#E2E8F0;
+  --text:#0F172A;--muted:#64748B;--shadow:0 4px 24px rgba(0,0,0,.08);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+button{cursor:pointer;border:none;font-family:inherit}
+input,textarea,select{font-family:inherit}
+.screen{display:none;animation:fadeIn .35s ease}
+.screen.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* LOGIN */
+#loginScreen{min-height:100vh;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(59,130,246,.25) 0%,transparent 70%)}
+.login-card{position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 44px;width:100%;max-width:420px;box-shadow:var(--shadow)}
+.login-brand{display:flex;align-items:center;gap:12px;margin-bottom:36px}
+.login-logo{width:42px;height:42px;background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.login-brand-text h1{font-size:18px;font-weight:700}
+.login-brand-text p{font-size:12px;color:var(--muted);margin-top:1px}
+.login-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.5px;margin-bottom:24px}
+.login-badge::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.login-title{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.login-sub{font-size:14px;color:var(--muted);margin-bottom:32px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.4px;margin-bottom:8px;text-transform:uppercase}
+.field input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;color:var(--text);transition:border-color .2s;outline:none}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.field input::placeholder{color:var(--muted)}
+.login-btn{width:100%;background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border-radius:10px;padding:13px;font-size:15px;font-weight:600;margin-top:8px;transition:opacity .2s}
+.login-btn:hover{opacity:.9}
+.demo-hint{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--green);margin-bottom:20px}
+.demo-hint strong{display:block;margin-bottom:2px}
+.login-footer{margin-top:36px;padding-top:24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
+
+/* APP */
+#appScreen{min-height:100vh;flex-direction:row}
+.sidebar{width:260px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-top{padding:20px 16px 16px;border-bottom:1px solid var(--border)}
+.sidebar-brand{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.s-logo{width:34px;height:34px;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.s-brand-name{font-size:15px;font-weight:700}
+.s-brand-sub{font-size:10px;color:var(--muted)}
+.company-selector{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s}
+.company-selector:hover{border-color:var(--accent)}
+.company-avatar{width:28px;height:28px;background:#1450C8;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.company-name{font-size:13px;font-weight:600}
+.company-type{font-size:10px;color:var(--muted)}
+.sidebar-nav{padding:12px 8px;flex:1}
+.nav-section{margin-bottom:20px}
+.nav-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;padding:0 8px;margin-bottom:6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:rgba(59,130,246,.12);color:var(--accent)}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}img.nav-icon{width:22px;height:22px;flex-shrink:0;border-radius:50%}.agent-card-header img{width:72px;height:72px;border-radius:50%}.agent-detail-icon img{width:44px;height:44px;border-radius:50%}.hist-icon img{width:22px;height:22px;border-radius:50%}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.nav-badge.orange{background:var(--orange)}
+.nav-badge.green{background:var(--green)}
+.sidebar-bottom{padding:12px 8px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:background .15s}
+.user-card:hover{background:var(--surface2)}
+.user-avatar{width:32px;height:32px;background:linear-gradient(135deg,#2563EB,#7C3AED);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:12.5px;font-weight:600}
+.user-role{font-size:10px;color:var(--muted)}
+.main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+.topbar{height:60px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;background:var(--surface);flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:600;flex:1}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:36px;height:36px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .15s;color:var(--text)}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.content{flex:1;padding:28px;overflow-y:auto}
+.content-section{display:none}
+.content-section.active{display:block;animation:fadeIn .3s ease}
+
+/* DASHBOARD */
+.welcome-bar{background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(124,58,237,.15));border:1px solid rgba(59,130,246,.25);border-radius:16px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between}
+.welcome-bar h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.welcome-bar p{font-size:13.5px;color:var(--muted)}
+.welcome-action{background:var(--accent);color:#fff;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:border-color .2s,transform .2s}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.stat-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+.stat-value{font-size:30px;font-weight:700;letter-spacing:-1px;margin-bottom:4px}
+.stat-change{font-size:12px;color:var(--green)}
+.stat-change.neg{color:var(--red)}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:16px;font-weight:700}
+.section-link{font-size:13px;color:var(--accent);font-weight:500;cursor:pointer}
+
+/* AGENT CARDS */
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px}
+.agent-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s}
+.agent-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 32px rgba(59,130,246,.15)}
+.agent-card-header{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px}
+.ah-blue,.ah-purple,.ah-teal,.ah-orange,.ah-pink,.ah-indigo,.ah-cyan,.ah-rose{background:#3B5BDB}
+.agent-card-body{padding:16px}
+.agent-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:6px;margin-bottom:10px}
+.tag-contable{background:rgba(59,130,246,.12);color:var(--accent)}
+.tag-societario{background:rgba(124,58,237,.12);color:#A78BFA}
+.tag-financiero{background:rgba(16,185,129,.12);color:var(--green)}
+.tag-operativo{background:rgba(245,158,11,.12);color:var(--orange)}
+.agent-card-body h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.agent-card-body p{font-size:12.5px;color:var(--muted);line-height:1.5;margin-bottom:14px}
+.agent-card-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:12px}
+.agent-status{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--green)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.agent-open-btn{font-size:12px;font-weight:600;color:var(--accent)}
+
+/* ACTIVITY */
+.activity-list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.activity-item{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border);transition:background .15s}
+.activity-item:last-child{border-bottom:none}
+.activity-item:hover{background:var(--surface2)}
+.activity-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:#3B5BDB}
+.ai-blue,.ai-green,.ai-purple,.ai-orange{background:#3B5BDB}
+.activity-icon img{width:24px;height:24px;border-radius:50%}
+.activity-info{flex:1}
+.activity-info h4{font-size:13.5px;font-weight:600;margin-bottom:2px}
+.activity-info p{font-size:12px;color:var(--muted)}
+.activity-time{font-size:11px;color:var(--muted)}
+.activity-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px}
+.ab-done{background:rgba(16,185,129,.12);color:var(--green)}
+.ab-run{background:rgba(59,130,246,.12);color:var(--accent)}
+
+/* AGENT DETAIL */
+.agent-detail-header{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;gap:20px}
+.agent-detail-icon{width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.agent-detail-info h2{font-size:22px;font-weight:700;margin-bottom:4px}
+.agent-detail-info p{font-size:13.5px;color:var(--muted);line-height:1.5}
+.agent-detail-meta{margin-left:auto;text-align:right}
+.status-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);color:var(--green);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;margin-bottom:6px}
+.agent-workspace{display:grid;grid-template-columns:1fr 360px;gap:20px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-header h3{font-size:14px;font-weight:700}
+.panel-body{padding:20px}
+.input-group{margin-bottom:16px}
+.input-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px}
+.input-group input,.input-group select,.input-group textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13.5px;color:var(--text);outline:none;transition:border-color .2s}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{border-color:var(--accent)}
+.input-group textarea{resize:vertical;min-height:90px;line-height:1.5}
+.input-group select option{background:var(--surface)}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-zone:hover{border-color:var(--accent);background:rgba(59,130,246,.05)}
+.upload-zone.uploaded{border-color:var(--green);background:rgba(16,185,129,.05)}
+.upload-zone input[type="file"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.upload-zone .upload-icon{font-size:34px;margin-bottom:8px}
+.upload-zone h4{font-size:14px;font-weight:600;margin-bottom:4px}
+.upload-zone p{font-size:12px;color:var(--muted)}
+.file-hint{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--orange);margin-bottom:16px;line-height:1.5}
+.file-hint strong{display:block;margin-bottom:2px}
+.paste-toggle{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;text-align:center;margin-top:10px;display:block}
+.paste-area{display:none;margin-top:12px}
+.paste-area.show{display:block}
+
+.run-btn{width:100%;background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border-radius:10px;padding:14px;font-size:15px;font-weight:700;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.run-btn:hover{opacity:.9;transform:translateY(-1px)}
+.output-box{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px;min-height:160px;font-size:13px;line-height:1.7;color:var(--muted);white-space:pre-wrap}
+.output-box.has-content{color:var(--text)}
+.output-actions{display:flex;gap:8px;margin-top:12px}
+.out-btn{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px;font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.out-btn:hover{border-color:var(--accent);color:var(--accent)}
+.history-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.history-item:last-child{border-bottom:none}
+.hist-icon{width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.hist-info{flex:1}
+.hist-info h5{font-size:13px;font-weight:600;margin-bottom:2px}
+.hist-info p{font-size:11px;color:var(--muted)}
+.hist-dl{font-size:11px;color:var(--accent);font-weight:600;cursor:pointer}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:20px;transition:color .15s}
+.back-btn:hover{color:var(--text)}
+
+/* CHAT */
+.chat-messages{min-height:200px;max-height:380px;overflow-y:auto;margin-bottom:16px;display:flex;flex-direction:column;gap:12px}
+.msg-bot{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;margin-right:20%}
+.msg-user{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;margin-left:20%}
+.chat-input-row{display:flex;gap:8px}
+.chat-input-row input{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13.5px;color:var(--text);outline:none}
+.chat-input-row input:focus{border-color:var(--accent)}
+.chat-send-btn{background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;font-size:13px;font-weight:600}
+
+/* TREASURY RESULT */
+.treasury-result{display:none;margin-top:20px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.25);border-radius:12px;padding:20px}
+.treasury-result.show{display:block;animation:fadeIn .3s ease}
+.treasury-result h4{font-size:15px;font-weight:700;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px}
+.kpi-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi-value{font-size:16px;font-weight:700}
+.kpi-value.red{color:var(--red)}
+.kpi-value.green{color:var(--green)}
+.kpi-value.orange{color:var(--orange)}
+.dl-excel-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,#064E3B,#10B981);color:#fff;border-radius:10px;padding:13px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+.dl-excel-btn:hover{opacity:.9}
+
+/* BI DASHBOARD */
+.bi-dashboard{display:none;margin-top:0}
+.bi-dashboard.show{display:block;animation:fadeIn .3s ease}
+.bi-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.bi-kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.bi-kpi-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.bi-kpi-value{font-size:22px;font-weight:700;margin-bottom:3px}
+.bi-kpi-sub{font-size:11px;color:var(--muted)}
+.bi-section-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.bi-charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.bi-chart-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.bi-chart-box h4{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:12px}
+.bi-debtor-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
+.bi-debtor-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.bi-debtor-table th{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:6px 10px;text-align:left}
+.bi-debtor-table td{padding:9px 10px;border-top:1px solid var(--border)}
+.bi-commentary{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:18px;margin-bottom:16px;display:none}
+.bi-commentary.show{display:block}
+.bi-commentary h4{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.bi-commentary p{font-size:12.5px;line-height:1.75;color:var(--text);margin-bottom:10px}
+.bi-commentary p:last-child{margin-bottom:0}
+
+/* PROCESSING */
+.processing-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.processing-overlay.show{display:flex}
+.processing-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px 48px;text-align:center;max-width:340px}
+.spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.processing-card p{font-size:13px;color:var(--muted)}
+.processing-steps{margin-top:20px;text-align:left}
+.p-step{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12.5px;color:var(--muted);transition:color .3s}
+.p-step.done{color:var(--green)}
+.p-step.active-step{color:var(--text)}
+.p-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .3s}
+.p-step.done .p-dot{background:var(--green);border-color:var(--green)}
+.p-step.active-step .p-dot{border-color:var(--accent);animation:pulse 1.2s infinite}
+
+/* TOAST */
+.notification-toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);z-index:200;transform:translateY(80px);opacity:0;transition:all .35s}
+.notification-toast.show{transform:translateY(0);opacity:1}
+.toast-icon{width:32px;height:32px;background:rgba(16,185,129,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.toast-text h4{font-size:13.5px;font-weight:700;margin-bottom:2px}
+.toast-text p{font-size:12px;color:var(--muted)}
+.toast-close{color:var(--muted);font-size:16px;cursor:pointer;margin-left:8px}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="screen active">
+  <div class="login-bg"></div>
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-logo">
+        <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+          <text x="19" y="16" font-family="Arial Black,Franklin Gothic Heavy,sans-serif" font-weight="900" font-size="13" fill="#1450C8" text-anchor="middle" letter-spacing="0.5">GEO</text>
+          <text x="19" y="29" font-family="Arial Black,Franklin Gothic Heavy,sans-serif" font-weight="900" font-size="13" fill="#1450C8" text-anchor="middle" letter-spacing="0.5">TAX</text>
+          <rect x="5" y="32" width="28" height="3" rx="1.5" fill="#1450C8"/>
+        </svg>
+      </div>
+      <div class="login-brand-text"><h1>GeoTax SAS</h1><p>Portal de Inteligencia Artificial</p></div>
+    </div>
+    <div class="login-badge" style="display:flex;align-items:center;gap:8px;padding:5px 14px">
+      <svg width="32" height="14" viewBox="0 0 32 14" xmlns="http://www.w3.org/2000/svg">
+        <text x="16" y="7" font-family="Arial Black,sans-serif" font-weight="900" font-size="6" fill="#1450C8" text-anchor="middle" letter-spacing="0.4">GEO</text>
+        <text x="16" y="13" font-family="Arial Black,sans-serif" font-weight="900" font-size="6" fill="#1450C8" text-anchor="middle" letter-spacing="0.4">TAX</text>
+      </svg>
+      <span style="color:var(--muted);font-size:10px">×</span>
+      <svg width="44" height="16" viewBox="0 0 44 16" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="3"  cy="5" r="1.2" fill="#1450C8" opacity="0.7"/>
+        <circle cx="7"  cy="5" r="1.2" fill="#1450C8" opacity="0.7"/>
+        <circle cx="3"  cy="9" r="1.2" fill="#1450C8"/>
+        <circle cx="7"  cy="9" r="1.2" fill="#1450C8"/>
+        <circle cx="3"  cy="13" r="1.2" fill="#1450C8" opacity="0.5"/>
+        <circle cx="7"  cy="13" r="1.2" fill="#1450C8" opacity="0.7"/>
+        <text x="28" y="9.5" font-family="Arial Black,sans-serif" font-weight="900" font-size="8" fill="#1450C8" text-anchor="middle" letter-spacing="0.3">RED</text>
+        <text x="28" y="15.5" font-family="Arial,sans-serif" font-weight="700" font-size="4.5" fill="#1450C8" text-anchor="middle" letter-spacing="0.5">INTERCABLE</text>
+      </svg>
+    </div>
+    <h2 class="login-title">Bienvenido</h2>
+    <p class="login-sub">Ingresá con tu cuenta para acceder a los agentes de IA.</p>
+    <div class="demo-hint"><strong>Acceso de demo:</strong> usuario: marcos@geotax.com.ar &nbsp;|&nbsp; contraseña: cualquier texto</div>
+    <div class="field"><label>Correo electrónico</label><input type="email" id="loginEmail" placeholder="tu@email.com" value="marcos@geotax.com.ar"></div>
+    <div class="field"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" value="••••••••"></div>
+    <button class="login-btn" onclick="doLogin()">Ingresar al portal →</button>
+    <div class="login-footer">
+      <span>🔒 Acceso seguro · GeoTax SAS</span>
+      <span style="display:flex;align-items:center;gap:4px">
+        Powered by
+        <svg width="36" height="12" viewBox="0 0 36 12" xmlns="http://www.w3.org/2000/svg" style="opacity:.7">
+          <text x="18" y="9.5" font-family="Arial Black,sans-serif" font-weight="900" font-size="9" fill="var(--muted)" text-anchor="middle" letter-spacing="0.5">Claude</text>
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen" class="screen">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-brand">
+        <div class="s-logo">
+          <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
+            <text x="15" y="13" font-family="Arial Black,Franklin Gothic Heavy,sans-serif" font-weight="900" font-size="10.5" fill="#1450C8" text-anchor="middle" letter-spacing="0.3">GEO</text>
+            <text x="15" y="23" font-family="Arial Black,Franklin Gothic Heavy,sans-serif" font-weight="900" font-size="10.5" fill="#1450C8" text-anchor="middle" letter-spacing="0.3">TAX</text>
+            <rect x="4" y="25.5" width="22" height="2.5" rx="1.25" fill="#1450C8"/>
+          </svg>
+        </div>
+        <div><div class="s-brand-name">GeoTax SAS</div><div class="s-brand-sub">Portal IA — v2.0</div></div>
+      </div>
+      <div class="company-selector">
+        <div class="company-avatar">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <!-- dot grid (3×3) -->
+            <circle cx="5"  cy="8"  r="1.4" fill="white" opacity="0.65"/>
+            <circle cx="9"  cy="8"  r="1.4" fill="white" opacity="0.65"/>
+            <circle cx="5"  cy="12" r="1.4" fill="white" opacity="0.9"/>
+            <circle cx="9"  cy="12" r="1.4" fill="white"/>
+            <circle cx="5"  cy="16" r="1.4" fill="white" opacity="0.45"/>
+            <circle cx="9"  cy="16" r="1.4" fill="white" opacity="0.65"/>
+            <!-- RED text -->
+            <text x="22" y="12" font-family="Arial Black,sans-serif" font-weight="900" font-size="8.5" fill="white" text-anchor="middle" letter-spacing="0.3">RED</text>
+            <text x="22" y="20" font-family="Arial,sans-serif" font-weight="700" font-size="4.5" fill="white" text-anchor="middle" letter-spacing="0.5">INTER</text>
+            <text x="22" y="25" font-family="Arial,sans-serif" font-weight="700" font-size="4.5" fill="white" text-anchor="middle" letter-spacing="0.5">CABLE</text>
+          </svg>
+        </div>
+        <div><div class="company-name">Red Intercable</div><div class="company-type">Responsable Inscripto</div></div>
+        <div style="margin-left:auto;color:var(--muted)">⌄</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">Principal</div>
+        <div class="nav-item active" onclick="showSection('dashboard',this)"><img class="nav-icon" src="icons/icon-dashboard.svg" alt="">Dashboard</div>
+        <div class="nav-item" onclick="showSection('agentes',this)"><img class="nav-icon" src="icons/icon-agentes.svg" alt="">Agentes IA<span class="nav-badge">8</span></div>
+        <div class="nav-item" onclick="showSection('historial',this)"><img class="nav-icon" src="icons/icon-historial.svg" alt="">Historial</div>
+        <div class="nav-item" onclick="showSection('documentos',this)"><img class="nav-icon" src="icons/icon-documentos.svg" alt="">Documentos<span class="nav-badge green">3</span></div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Agentes</div>
+        <div class="nav-item" onclick="openAgent('corporativo')"><img class="nav-icon" src="icons/icon-corporativo.svg" alt="">Asistente Corp.</div>
+        <div class="nav-item" onclick="openAgent('actas')"><img class="nav-icon" src="icons/icon-actas.svg" alt="">Generador Actas</div>
+        <div class="nav-item" onclick="openAgent('resultados')"><img class="nav-icon" src="icons/icon-resultados.svg" alt="">Análisis Mensual</div>
+        <div class="nav-item" onclick="openAgent('conciliacion')"><img class="nav-icon" src="icons/icon-conciliacion.svg" alt="">Conciliación Banc.</div>
+        <div class="nav-item" onclick="openAgent('amortizaciones')"><img class="nav-icon" src="icons/icon-amortizaciones.svg" alt="">Amortizaciones</div>
+        <div class="nav-item" onclick="openAgent('pagos')"><img class="nav-icon" src="icons/icon-pagos.svg" alt="">Propuesta Pagos</div>
+        <div class="nav-item" onclick="openAgent('facturas')"><img class="nav-icon" src="icons/icon-facturas.svg" alt="">Carga Facturas<span class="nav-badge orange">!</span></div>
+        <div class="nav-item" onclick="openAgent('soporte')"><img class="nav-icon" src="icons/icon-soporte.svg" alt="">Soporte</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Config.</div>
+        <div class="nav-item" onclick="toggleTheme()"><span class="nav-icon" id="themeIcon">☀️</span><span id="themeLabel">Modo claro</span></div>
+      </div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="user-avatar">MB</div>
+        <div><div class="user-name">Marcos Bernasconi</div><div class="user-role">Super Admin</div></div>
+        <div style="margin-left:auto;color:var(--muted);cursor:pointer" onclick="doLogout()">⏏</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-actions">
+        <div class="icon-btn">🔔</div>
+        <div class="icon-btn" onclick="toggleTheme()">🌙</div>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div id="sec-dashboard" class="content-section active">
+        <div class="welcome-bar">
+          <div><h2>Buenos días, Marcos 👋</h2><p>Red Intercable · Mayo 2026 · Todo funcionando correctamente</p></div>
+          <button class="welcome-action" onclick="openAgent('conciliacion')">+ Nueva tarea con IA</button>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Sesiones este mes</div><div class="stat-value">47</div><div class="stat-change">↑ 18% vs mes anterior</div></div>
+          <div class="stat-card"><div class="stat-label">Docs generados</div><div class="stat-value">23</div><div class="stat-change">↑ 12 nuevos</div></div>
+          <div class="stat-card"><div class="stat-label">Horas ahorradas</div><div class="stat-value">61</div><div class="stat-change">↑ estimado este mes</div></div>
+          <div class="stat-card"><div class="stat-label">Costo IA (USD)</div><div class="stat-value">$8.40</div><div class="stat-change neg">↑ uso mayor al mes pasado</div></div>
+        </div>
+        <div class="section-header"><div class="section-title">Agentes disponibles</div><div class="section-link" onclick="showSection('agentes',null)">Ver todos →</div></div>
+        <div class="agents-grid" id="dashAgentGrid"></div>
+        <div class="section-header"><div class="section-title">Actividad reciente</div></div>
+        <div class="activity-list">
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-actas.svg" alt=""></div><div class="activity-info"><h4>Acta de Directorio — Red Intercable</h4><p>Aprobación EECC 2025</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">Hoy 10:23</div></div>
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-conciliacion.svg" alt=""></div><div class="activity-info"><h4>Conciliación Bancaria Abril 2026</h4><p>3 diferencias detectadas</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">Ayer 16:45</div></div>
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-facturas.svg" alt=""></div><div class="activity-info"><h4>Carga masiva — 47 facturas</h4><p>2 duplicados detectados</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">Lun 14:30</div></div>
+        </div>
+      </div>
+
+      <!-- AGENTES -->
+      <div id="sec-agentes" class="content-section">
+        <div class="section-header" style="margin-bottom:20px"><div class="section-title">Todos los agentes IA</div></div>
+        <div class="agents-grid" id="allAgentGrid"></div>
+      </div>
+
+      <!-- HISTORIAL -->
+      <div id="sec-historial" class="content-section">
+        <div class="section-title" style="margin-bottom:20px">Historial de sesiones</div>
+        <div class="activity-list">
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-actas.svg" alt=""></div><div class="activity-info"><h4>Acta de Directorio N°142</h4><p>Generador de Actas · Red Intercable</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">07/05</div></div>
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-conciliacion.svg" alt=""></div><div class="activity-info"><h4>Conciliación Santander Abril</h4><p>3 diferencias · $0.18 USD</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">06/05</div></div>
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-resultados.svg" alt=""></div><div class="activity-info"><h4>Análisis EECC Marzo 2026</h4><p>Reporte PDF generado</p></div><span class="activity-badge ab-done">Completado</span><div class="activity-time">06/05</div></div>
+        </div>
+      </div>
+
+      <!-- DOCUMENTOS -->
+      <div id="sec-documentos" class="content-section">
+        <div class="section-title" style="margin-bottom:20px">Documentos generados</div>
+        <div class="activity-list">
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-actas.svg" alt=""></div><div class="activity-info"><h4>Acta-Directorio-2026-05.docx</h4><p>Hoy · /Red Intercable/Actas/2026/</p></div><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">🔗 Drive</span></div>
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-conciliacion.svg" alt=""></div><div class="activity-info"><h4>Conciliacion-Santander-2026-04.xlsx</h4><p>Ayer · /Red Intercable/Contabilidad/</p></div><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">🔗 Drive</span></div>
+          <div class="activity-item"><div class="activity-icon"><img src="icons/icon-resultados.svg" alt=""></div><div class="activity-info"><h4>Analisis-Resultados-2026-03.pdf</h4><p>Ayer · /Red Intercable/Análisis/</p></div><span style="font-size:12px;font-weight:600;color:var(--accent);cursor:pointer">🔗 Drive</span></div>
+        </div>
+      </div>
+
+      <!-- AGENT DETAIL -->
+      <div id="sec-agent" class="content-section">
+        <div class="back-btn" onclick="goBack()">← Volver</div>
+        <div id="agentDetailContent"></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- PROCESSING -->
+<div class="processing-overlay" id="processingOverlay">
+  <div class="processing-card">
+    <div class="spinner"></div>
+    <h3>Procesando con IA...</h3>
+    <p>Claude está analizando tu solicitud</p>
+    <div class="processing-steps" id="processingSteps"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="notification-toast" id="toast">
+  <div class="toast-icon">✅</div>
+  <div class="toast-text"><h4 id="toastTitle">Completado</h4><p id="toastMsg">El documento fue generado correctamente.</p></div>
+  <span class="toast-close" onclick="hideToast()">✕</span>
+</div>
+
+<script>
+// ─── ESTADO GLOBAL ──────────────────────────────────────────────────────────
+let currentAgent = null;
+let isDark = true;
+let uploadedFiles = {};
+let lastTreasuryResult     = null; // treasury matching result
+let lastConciliacionResult = null; // conciliación bancaria workbook
+let biCharts = {};                 // active Chart.js instances (BI dashboard)
+
+// ─── DEFINICIÓN DE AGENTES ──────────────────────────────────────────────────
+const agentList = [
+  {key:'corporativo', icon:'<img src="icons/icon-corporativo.svg" alt="">', color:'ah-blue',   name:'Asistente Corporativo',  short:'Chat con base documental interna de Geo Tax.',                                                   tag:'Chatbot',   tagClass:'tag-contable',  type:'chat',     steps:['Analizando pregunta...','Buscando en base documental...','Generando respuesta...']},
+  {key:'actas',       icon:'<img src="icons/icon-actas.svg" alt="">', color:'ah-purple',  name:'Generador de Actas',     short:'Actas societarias con lenguaje legal argentino.',                                                tag:'Societario',tagClass:'tag-societario',type:'form',     steps:['Procesando datos...','Aplicando Ley 19.550...','Redactando acta...','Generando documento...']},
+  {key:'resultados',  icon:'<img src="icons/icon-resultados.svg" alt="">', color:'ah-teal',    name:'Análisis de Resultados',
+   short:'Dashboard BI con KPIs, gráficos y análisis ejecutivo IA. Subí el Tablero BI.xlsx para visualizar tus resultados al instante.',
+   tag:'BI Dashboard', tagClass:'tag-financiero', type:'bi',
+   steps:['Leyendo Tablero BI...','Procesando P&L...','Calculando KPIs...','Renderizando gráficos...','Generando análisis ejecutivo...']},
+  {key:'soporte',     icon:'<img src="icons/icon-soporte.svg" alt="">', color:'ah-pink',    name:'Soporte a Mandantes',    short:'Gestión de consultas y respuestas automáticas.',                                                tag:'Soporte',   tagClass:'tag-operativo', type:'chat',     steps:['Clasificando consulta...','Generando respuesta...']},
+  {key:'conciliacion',icon:'<img src="icons/icon-conciliacion.svg" alt="">', color:'ah-indigo',  name:'Conciliación Bancaria',
+   short:'Cruza extracto bancario con mayor contable. Genera Excel profesional con secciones, partidas de conciliación, alertas y resumen.',
+   tag:'Contable', tagClass:'tag-contable', type:'dual',
+   steps:['Leyendo extracto bancario...','Leyendo mayor contable...','Cruzando movimientos...','Detectando diferencias y alertas...','Construyendo Excel profesional...']},
+  {key:'amortizaciones',icon:'<img src="icons/icon-amortizaciones.svg" alt="">',color:'ah-cyan',   name:'Amortizaciones RT 17',   short:'Cuadros de amortización según RT 17 FACPCE.',                                                  tag:'RT 17',     tagClass:'tag-contable',  type:'upload',   steps:['Leyendo bienes de uso...','Aplicando RT 17...','Calculando amortizaciones...','Generando cuadro...']},
+  // ── TREASURY MATCHING AGENT ──────────────────────────────────────────────
+  {key:'pagos',       icon:'<img src="icons/icon-pagos.svg" alt="">', color:'ah-orange',  name:'Propuesta de Pagos',
+   short:'Matching inteligente cheques × proveedores. Subí los dos Excel y descargá la propuesta con 3 hojas al instante.',
+   tag:'Tesorería',  tagClass:'tag-financiero',
+   type:'treasury',
+   steps:['Leyendo cheques en cartera...','Leyendo facturas de proveedores...','Ejecutando algoritmo de matching...','Priorizando por vencimiento...','Construyendo Excel con 3 hojas...']},
+  // ─────────────────────────────────────────────────────────────────────────
+  {key:'facturas',    icon:'<img src="icons/icon-facturas.svg" alt="">', color:'ah-rose',    name:'Carga Masiva Facturas',  short:'Extrae datos de PDFs y detecta duplicados.',                                                   tag:'Operativo', tagClass:'tag-operativo', type:'upload',   steps:['Procesando archivos...','Extrayendo datos...','Validando CUITs...','Detectando duplicados...']},
+];
+
+// ─── RENDER GRIDS ────────────────────────────────────────────────────────────
+function renderAgentGrid(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = agentList.map(a => `
+    <div class="agent-card" onclick="openAgent('${a.key}')">
+      <div class="agent-card-header ${a.color}">${a.icon}</div>
+      <div class="agent-card-body">
+        <span class="agent-tag ${a.tagClass}">${a.tag}</span>
+        <h3>${a.name}</h3><p>${a.short}</p>
+        <div class="agent-card-footer">
+          <span class="agent-status"><span class="status-dot"></span>Listo</span>
+          <span class="agent-open-btn">Abrir →</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+renderAgentGrid('dashAgentGrid');
+renderAgentGrid('allAgentGrid');
+
+// ─── AUTH ────────────────────────────────────────────────────────────────────
+function doLogin() {
+  if (!document.getElementById('loginEmail').value) return;
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('appScreen').classList.add('active');
+}
+function doLogout() {
+  document.getElementById('appScreen').classList.remove('active');
+  document.getElementById('loginScreen').classList.add('active');
+}
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter' && document.getElementById('loginScreen').classList.contains('active')) doLogin();
+});
+
+// ─── NAVEGACIÓN ──────────────────────────────────────────────────────────────
+function showSection(id, navEl) {
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if (navEl) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); navEl.classList.add('active'); }
+  const titles = {dashboard:'Dashboard',agentes:'Agentes IA',historial:'Historial',documentos:'Documentos',agent:'Agente'};
+  document.getElementById('topbarTitle').textContent = titles[id] || id;
+}
+function goBack() {
+  Object.values(biCharts).forEach(c => { try { c.destroy(); } catch(e){} });
+  biCharts = {};
+  showSection('dashboard', null);
+  uploadedFiles = {};
+  lastTreasuryResult     = null;
+  lastConciliacionResult = null;
+}
+
+// ─── MANEJO DE ARCHIVOS (texto para CSV/TXT) ─────────────────────────────────
+function handleFile(input, slotKey, zoneId) {
+  const file = input.files[0];
+  if (!file) return;
+  const zone = document.getElementById(zoneId);
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    uploadedFiles[slotKey] = { name: file.name, content: e.target.result };
+    if (zone) {
+      zone.classList.add('uploaded');
+      zone.querySelector('h4').textContent = '✅ ' + file.name;
+      zone.querySelector('p').textContent = 'Listo · ' + (file.size/1024).toFixed(1) + ' KB';
+    }
+    showToast('📂 Archivo cargado', file.name + ' listo para procesar.');
+  };
+  reader.readAsText(file);
+}
+
+// ─── MANEJO DE ARCHIVOS XLSX (ArrayBuffer para SheetJS) ──────────────────────
+function handleXlsxFile(input, slotKey, zoneId) {
+  const file = input.files[0];
+  if (!file) return;
+  const zone = document.getElementById(zoneId);
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    uploadedFiles[slotKey] = { name: file.name, data: new Uint8Array(e.target.result) };
+    if (zone) {
+      zone.classList.add('uploaded');
+      zone.querySelector('h4').textContent = '✅ ' + file.name;
+      zone.querySelector('p').textContent = 'Listo · ' + (file.size/1024).toFixed(1) + ' KB';
+    }
+    showToast('📂 Excel cargado', file.name + ' listo para procesar.');
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function usePastedText(slotKey, textareaId) {
+  const val = document.getElementById(textareaId).value.trim();
+  if (!val) { showToast('⚠️ Sin contenido','Escribí o pegá texto primero.'); return; }
+  uploadedFiles[slotKey] = { name: 'texto pegado', content: val };
+  showToast('✅ Texto cargado', 'Contenido registrado correctamente.');
+}
+function togglePaste(id) { document.getElementById(id).classList.toggle('show'); }
+
+// ─── OPEN AGENT ──────────────────────────────────────────────────────────────
+function openAgent(key) {
+  // Destroy any active BI charts before re-rendering
+  Object.values(biCharts).forEach(c => { try { c.destroy(); } catch(e){} });
+  biCharts = {};
+  currentAgent = key;
+  uploadedFiles = {};
+  lastTreasuryResult = null;
+  const a = agentList.find(x => x.key === key);
+  if (!a) return;
+
+  let left = '';
+
+  if (a.type === 'chat') {
+    left = `<div class="panel"><div class="panel-header"><h3>💬 Chat con el agente</h3></div><div class="panel-body">
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg-bot">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+            <span style="font-size:15px">🤖</span>
+            <strong style="font-size:12px;color:var(--accent);letter-spacing:.3px">ASISTENTE CORPORATIVO</strong>
+          </div>
+          <div style="font-size:13px"><p style="margin:0;line-height:1.65">¡Hola! Soy el Asistente Corporativo de <strong>Geo Tax SAS</strong>. Estoy acá para ayudarte con consultas sobre impuestos, sociedades, facturación AFIP y más.<br><br>¿En qué te puedo ayudar hoy?</p></div>
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input id="chatInput" type="text" placeholder="Escribí tu consulta..." onkeydown="if(event.key==='Enter')sendChat('${key}')">
+        <button class="chat-send-btn" onclick="sendChat('${key}')">Enviar</button>
+      </div>
+    </div></div>`;
+
+  } else if (a.type === 'form') {
+    left = `<div class="panel"><div class="panel-header"><h3>📝 Datos del acta</h3></div><div class="panel-body">
+      <div class="input-group"><label>Tipo de acta</label>
+        <select id="tipoActa"><option>Acta de Directorio</option><option>Acta de Asamblea Ordinaria</option><option>Acta de Asamblea Extraordinaria</option><option>Reunión de Socios SAS</option></select>
+      </div>
+      <div class="input-group"><label>Fecha de la reunión</label><input type="date" id="fechaActa"></div>
+      <div class="input-group"><label>Participantes</label><textarea id="participantes" placeholder="Juan García – Presidente; María López – Directora Titular"></textarea></div>
+      <div class="input-group"><label>Orden del día</label><textarea id="ordenDia" placeholder="1. Aprobación EECC 2025&#10;2. Distribución de resultados&#10;3. Varios"></textarea></div>
+      <div class="input-group"><label>Resoluciones adoptadas</label><textarea id="resoluciones" placeholder="Describí qué se resolvió en cada punto..."></textarea></div>
+    </div></div>
+    <div class="panel"><div class="panel-header"><h3>📄 Resultado</h3></div><div class="panel-body">
+      <div class="output-box" id="outputBox">El acta aparecerá aquí...</div>
+      <div class="output-actions" id="outputActions" style="display:none">
+        <button class="out-btn" onclick="copyOutput()">📋 Copiar</button>
+        <button class="out-btn" onclick="downloadOutput('acta')">⬇ Descargar TXT</button>
+        <button class="out-btn" style="background:rgba(99,102,241,.15);border-color:#6366f1;color:#6366f1" onclick="downloadWord('Acta_RedIntercable')">📄 Descargar Word</button>
+      </div>
+    </div></div>`;
+
+  } else if (a.type === 'dual') {
+    left = `<div class="panel"><div class="panel-header"><h3>📂 Archivos para conciliar</h3></div><div class="panel-body">
+      <div class="file-hint"><strong>💡 Formatos aceptados: CSV o TXT</strong>
+      Si tenés Excel: abrilo → Archivo → Guardar como → CSV UTF-8. Si tenés PDF del banco: copiá el texto y usá la opción "Pegar texto" abajo.</div>
+      <div class="input-group"><label>Extracto bancario</label>
+        <div class="upload-zone" id="zone-ext">
+          <input type="file" accept=".csv,.txt,.tsv" onchange="handleFile(this,'extracto','zone-ext')">
+          <div class="upload-icon">🏦</div>
+          <h4>Clic o arrastrá el extracto bancario</h4>
+          <p>CSV o TXT · Santander, Galicia, BBVA, Macro, Nación</p>
+        </div>
+        <span class="paste-toggle" onclick="togglePaste('paste-ext')">¿Preferís pegar el texto? →</span>
+        <div class="paste-area" id="paste-ext">
+          <textarea id="pasteExt" placeholder="Pegá aquí el contenido del extracto bancario..." rows="5" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text);outline:none;resize:vertical;margin-top:8px"></textarea>
+          <button onclick="usePastedText('extracto','pasteExt')" style="margin-top:8px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">✓ Usar este texto</button>
+        </div>
+      </div>
+      <div class="input-group"><label>Mayor contable</label>
+        <div class="upload-zone" id="zone-may">
+          <input type="file" accept=".csv,.txt,.tsv" onchange="handleFile(this,'mayor','zone-may')">
+          <div class="upload-icon">📊</div>
+          <h4>Clic o arrastrá el mayor contable</h4>
+          <p>CSV o TXT · cualquier sistema contable</p>
+        </div>
+        <span class="paste-toggle" onclick="togglePaste('paste-may')">¿Preferís pegar el texto? →</span>
+        <div class="paste-area" id="paste-may">
+          <textarea id="pasteMay" placeholder="Pegá aquí el contenido del mayor contable..." rows="5" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text);outline:none;resize:vertical;margin-top:8px"></textarea>
+          <button onclick="usePastedText('mayor','pasteMay')" style="margin-top:8px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">✓ Usar este texto</button>
+        </div>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header"><h3>📄 Resultado</h3></div><div class="panel-body">
+      <div class="output-box" id="outputBox">El reporte de conciliación aparecerá aquí...</div>
+      <div class="output-actions" id="outputActions" style="display:none">
+        <button class="out-btn" onclick="copyOutput()">📋 Copiar</button>
+        <button class="out-btn" onclick="downloadOutput('conciliacion')">⬇ Descargar TXT</button>
+        <button class="out-btn" style="background:rgba(16,185,129,.15);border-color:var(--green);color:var(--green)" onclick="downloadExcel()">📊 Descargar Excel</button>
+      </div>
+    </div></div>`;
+
+  } else if (a.type === 'treasury') {
+    // ── RIC TREASURY MATCHING AGENT ────────────────────────────────────────
+    left = `
+      <div class="panel">
+        <div class="panel-header"><h3>📂 Archivos de entrada</h3></div>
+        <div class="panel-body">
+          <div class="file-hint">
+            <strong>💡 RIC Treasury Matching Agent</strong>
+            Subí los dos Excel originales. El agente procesa directamente el formato del sistema de Red Intercable — no necesitás convertir a CSV.
+          </div>
+
+          <div class="input-group">
+            <label>Archivo 1 — Cheques en cartera (.xlsx)</label>
+            <div class="upload-zone" id="zone-chq">
+              <input type="file" accept=".xlsx,.xls" onchange="handleXlsxFile(this,'cheques','zone-chq')">
+              <div class="upload-icon">💳</div>
+              <h4>Clic o arrastrá el Excel de cheques</h4>
+              <p>Busca automáticamente la pestaña "BAS 2024 y ss"</p>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Archivo 2 — Proveedores / Facturas (.xlsx)</label>
+            <div class="upload-zone" id="zone-prov">
+              <input type="file" accept=".xlsx,.xls" onchange="handleXlsxFile(this,'proveedores','zone-prov')">
+              <div class="upload-icon">🧾</div>
+              <h4>Clic o arrastrá el Excel de proveedores</h4>
+              <p>prov.xlsx · lee saldo pendiente en pesos por factura</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posición financiera -->
+      <div class="panel" style="margin-top:14px">
+        <div class="panel-header"><h3>💰 Posición Financiera Actual</h3></div>
+        <div class="panel-body">
+          <p style="font-size:12px;color:var(--text-muted);margin:0 0 14px 0">Ingresá la posición actual de caja y activos disponibles. Se incorporarán al análisis de capacidad de pago y a la hoja <strong>Lineamiento</strong> del Excel.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="input-group" style="margin:0">
+              <label>Saldo en Caja ($)</label>
+              <input type="number" id="inputCaja" placeholder="0" min="0" step="1000"
+                style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--text);outline:none;margin-top:6px;box-sizing:border-box">
+            </div>
+            <div class="input-group" style="margin:0">
+              <label>Activos Disponibles ($)</label>
+              <input type="number" id="inputActivos" placeholder="0" min="0" step="1000"
+                style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--text);outline:none;margin-top:6px;box-sizing:border-box">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultado (aparece después de procesar) -->
+      <div id="treasuryResult" class="treasury-result">
+        <h4>✅ Propuesta generada correctamente</h4>
+        <div class="kpi-grid" id="treasuryKpis"></div>
+        <button class="dl-excel-btn" onclick="downloadTreasuryExcel()">
+          📊 Descargar Excel — 4 hojas (Propuesta / Resumen / Alertas / Lineamiento)
+        </button>
+      </div>`;
+
+  } else if (a.type === 'bi') {
+    // ── BI DASHBOARD AGENT ───────────────────────────────────────────────────
+    left = `
+      <div class="panel">
+        <div class="panel-header"><h3>📂 Cargar Tablero BI</h3></div>
+        <div class="panel-body">
+          <div class="file-hint">
+            <strong>💡 Tablero BI.xlsx</strong>
+            Subí el archivo Excel que alimenta el dashboard. El agente detecta automáticamente las pestañas: Indicadores Clave, Economico nuevo, Info financiero.
+          </div>
+          <div class="upload-zone" id="zone-bi">
+            <input type="file" accept=".xlsx,.xls" onchange="handleXlsxFile(this,'tableroBI','zone-bi')">
+            <div class="upload-icon">📊</div>
+            <h4>Clic o arrastrá Tablero BI.xlsx</h4>
+            <p>Acepta cualquier versión del archivo — detecta todas las pestañas</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="biDashboard" class="bi-dashboard">
+        <div class="panel">
+          <div class="panel-header"><h3>📈 Dashboard Financiero — Red Intercable</h3></div>
+          <div class="panel-body">
+            <div class="bi-kpi-row" id="biKPIs"></div>
+            <div class="bi-charts-row">
+              <div class="bi-chart-box">
+                <h4>Ingresos vs Costos por Mes (M$)</h4>
+                <canvas id="chartIngCost" height="230"></canvas>
+              </div>
+              <div class="bi-chart-box">
+                <h4>Utilidad Operativa Mensual (M$)</h4>
+                <canvas id="chartUtil" height="230"></canvas>
+              </div>
+            </div>
+            <div class="bi-debtor-box">
+              <div class="bi-section-title">👥 Cartera de Deudores</div>
+              <table class="bi-debtor-table" id="biDebtorTable"></table>
+            </div>
+            <div class="bi-commentary" id="biCommentary">
+              <h4>🤖 Análisis Ejecutivo — Claude AI</h4>
+              <div id="biCommentaryText"><em style="color:var(--muted)">Generando análisis ejecutivo...</em></div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+  } else {
+    left = `<div class="panel"><div class="panel-header"><h3>📂 Subir archivo</h3></div><div class="panel-body">
+      <div class="file-hint"><strong>💡 Formatos aceptados: CSV o TXT</strong>
+      Si tenés Excel exportá a CSV: Archivo → Guardar como → CSV.</div>
+      <div class="upload-zone" id="zone-gen">
+        <input type="file" accept=".csv,.txt,.tsv" onchange="handleFile(this,'archivo','zone-gen')">
+        <div class="upload-icon">📁</div>
+        <h4>Clic o arrastrá tu archivo aquí</h4>
+        <p>CSV o TXT · máx. 50 MB</p>
+      </div>
+      <span class="paste-toggle" onclick="togglePaste('paste-gen')">¿Preferís pegar el texto? →</span>
+      <div class="paste-area" id="paste-gen">
+        <textarea id="pasteGen" placeholder="Pegá aquí el contenido del archivo..." rows="6" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text);outline:none;resize:vertical;margin-top:8px"></textarea>
+        <button onclick="usePastedText('archivo','pasteGen')" style="margin-top:8px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">✓ Usar este texto</button>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header"><h3>📄 Resultado</h3></div><div class="panel-body">
+      <div class="output-box" id="outputBox">El resultado aparecerá aquí...</div>
+      <div class="output-actions" id="outputActions" style="display:none">
+        <button class="out-btn" onclick="copyOutput()">📋 Copiar</button>
+        <button class="out-btn" onclick="downloadOutput(currentAgent)">⬇ Descargar</button>
+      </div>
+    </div></div>`;
+  }
+
+  // Panel derecho — runFn varía según tipo
+  const runFn = a.type === 'treasury' ? 'runTreasury()' : a.type === 'bi' ? 'runBI()' : `runAgent('${key}')`;
+  const execDesc = a.type==='treasury' ? 'Subí los dos Excel y generá la propuesta de pago al instante — sin API calls, 100% local.'
+                 : a.type==='bi'       ? 'Subí el Tablero BI.xlsx para visualizar KPIs, gráficos mensuales y análisis ejecutivo generado por IA.'
+                 : 'Cargá los archivos y hacé clic para procesar con Claude AI.';
+  const execBtn  = a.type==='treasury' ? '💳 Generar Propuesta de Pago'
+                 : a.type==='bi'       ? '📊 Analizar Dashboard'
+                 : '✨ Procesar con IA';
+  const execNote = a.type==='treasury' ? 'Procesamiento local · sin límite de tamaño'
+                 : a.type==='bi'       ? 'Gráficos locales + análisis Claude Haiku 4.5'
+                 : 'Estimado: 15–45 segundos';
+  const modelStr = key==='corporativo' ? 'Claude Sonnet 4.6'
+                 : key==='pagos'       ? 'SheetJS (local)'
+                 : key==='resultados'  ? 'SheetJS + Haiku 4.5'
+                 : 'Claude Haiku 4.5';
+  const right = `
+    ${a.type !== 'chat' ? `<div class="panel"><div class="panel-header"><h3>🚀 Ejecutar</h3></div><div class="panel-body">
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.6">${execDesc}</p>
+      <button class="run-btn" onclick="${runFn}">${execBtn}</button>
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">${execNote}</p>
+    </div></div>` : ''}
+    <div class="panel"><div class="panel-header"><h3>ℹ️ Sobre este agente</h3></div><div class="panel-body">
+      <div style="display:grid;gap:8px;font-size:12px">
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Modelo</span><span style="font-weight:600">${modelStr}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Categoría</span><span style="font-weight:600">${a.tag}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Historial</span><span style="font-weight:600;color:var(--green)">✓ Guardado</span></div>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header"><h3>📂 Historial reciente</h3></div><div class="panel-body">
+      <div class="history-item"><div class="hist-icon">${a.icon}</div><div class="hist-info"><h5>${a.name} — Abril</h5><p>Hace 2 días · Completado</p></div><span class="hist-dl">Ver</span></div>
+      <div class="history-item"><div class="hist-icon">${a.icon}</div><div class="hist-info"><h5>${a.name} — Marzo</h5><p>Hace 5 días · Completado</p></div><span class="hist-dl">Ver</span></div>
+    </div></div>`;
+
+  document.getElementById('agentDetailContent').innerHTML = `
+    <div class="agent-detail-header">
+      <div class="agent-detail-icon ${a.color}">${a.icon}</div>
+      <div class="agent-detail-info"><h2>${a.name}</h2><p>${a.short}</p></div>
+      <div class="agent-detail-meta"><div class="status-pill"><span class="status-dot"></span>Listo para usar</div><p style="font-size:11px;color:var(--muted)">Powered by Claude AI</p></div>
+    </div>
+    <div class="agent-workspace"><div class="workspace-left">${left}</div><div class="workspace-right">${right}</div></div>`;
+
+  showSection('agent', null);
+  document.getElementById('topbarTitle').textContent = a.name;
+}
+
+// ─── BUILD PROMPT (agentes Claude API) ───────────────────────────────────────
+function buildPrompt(key) {
+  const ext = uploadedFiles['extracto'] ? '\n\nEXTRACTO BANCARIO:\n' + uploadedFiles['extracto'].content : '';
+  const may = uploadedFiles['mayor']    ? '\n\nMAYOR CONTABLE:\n'    + uploadedFiles['mayor'].content    : '';
+  const arc = uploadedFiles['archivo']  ? '\n\nDATOS DEL ARCHIVO:\n' + uploadedFiles['archivo'].content  : '';
+
+  const map = {
+    actas: () => {
+      const tipo = document.getElementById('tipoActa')?.value || 'Acta de Directorio';
+      const fecha = document.getElementById('fechaActa')?.value || 'hoy';
+      const part = document.getElementById('participantes')?.value || 'Marcos Bernasconi – Presidente';
+      const ord  = document.getElementById('ordenDia')?.value || '1. Aprobación EECC';
+      const res  = document.getElementById('resoluciones')?.value || 'Se aprueba por unanimidad.';
+      return `Sos el generador de actas de Geo Tax SAS. Redactá una ${tipo} para RED INTERCABLE S.A.S., fecha ${fecha}, con lenguaje legal argentino según Ley 19.550. PARTICIPANTES: ${part}. ORDEN DEL DÍA: ${ord}. RESOLUCIONES: ${res}. Generá el acta completa con apertura, desarrollo y cierre con espacio para firmas.`;
+    },
+    conciliacion: () => `Sos el agente de conciliación bancaria de Geo Tax SAS. Analizá el extracto bancario y el mayor contable y devolvé un objeto JSON válido (envuelto en \`\`\`json ... \`\`\`) con EXACTAMENTE esta estructura — todos los importes como números, sin signos $:
+
+\`\`\`json
+{
+  "empresa": "nombre de la empresa",
+  "cuenta": "descripción de la cuenta bancaria y número",
+  "periodo": "DD/MM/YYYY al DD/MM/YYYY",
+  "extracto": {
+    "saldoInicial": {"fecha": "DD/MM/YY", "importe": 0},
+    "creditos": [{"fecha": "DD/MM/YY", "concepto": "descripción agrupada por día/operación", "importe": 0}],
+    "debitos":  [{"fecha": "DD/MM/YY", "concepto": "descripción agrupada por día/operación", "importe": 0}],
+    "saldoFinal": {"fecha": "DD/MM/YY", "importe": 0}
+  },
+  "libros": {
+    "saldoInicial": {"fecha": "DD/MM/YY", "importe": 0},
+    "creditos": [{"fecha": "DD/MM/YY", "concepto": "descripción", "importe": 0}],
+    "debitos":  [{"fecha": "DD/MM/YY", "concepto": "descripción", "importe": 0}],
+    "saldoFinal": {"fecha": "DD/MM/YY", "importe": 0}
+  },
+  "partidas": {
+    "A": [{"fecha": "DD/MM/YY", "concepto": "débito bancario sin asiento en libros", "debito": 0, "credito": 0}],
+    "B": [{"fecha": "DD/MM/YY", "concepto": "asiento en libros sin reflejo en extracto", "importe": 0}],
+    "C": [{"fechaBanco": "DD/MM/YY", "fechaLibros": "DD/MM/YY", "concepto": "misma op. fechas distintas", "debito": 0, "credito": 0}]
+  },
+  "alertas": [{"fecha": "DD/MM/YY", "concepto": "descripción detallada de la alerta", "importe": 0}],
+  "resumen": {
+    "saldoFinalExtracto": 0,
+    "subtotalA": 0,
+    "subtotalB": 0,
+    "saldoAjustado": 0,
+    "diferenciaPendiente": 0,
+    "explicacion": "explicación de la diferencia pendiente Mayor vs Banco"
+  }
+}
+\`\`\`
+
+REGLAS: Agrupá transacciones del mismo día en extracto. Partidas A = en banco pero NO en libros. Partidas B = en libros pero NO en extracto. Partidas C = misma operación con fechas distintas. Alertas = montos inusuales, débitos elevados, reversiones, descubiertos, pagos AFIP elevados.${ext}${may}`,
+    resultados:    () => `Sos el agente de análisis financiero de Geo Tax SAS. Analizá los datos financieros de Red Intercable y generá un reporte ejecutivo con: resumen ejecutivo, variaciones vs período anterior, puntos positivos, alertas detectadas y tendencia. Formato profesional.${arc}`,
+    amortizaciones:() => `Sos el agente de amortizaciones de Geo Tax SAS, experto en RT 17 FACPCE. Procesá el listado de bienes de uso y generá un cuadro de amortizaciones completo por método lineal con: bien, valor de origen, vida útil, cuota anual, amortización acumulada y valor residual. Incluí el asiento contable sugerido.${arc}`,
+    facturas:      () => `Sos el agente de procesamiento de facturas de Geo Tax SAS. Procesá el listado de facturas de Red Intercable. Generá una tabla con: número, proveedor, CUIT, fecha, neto, IVA y total. Detectá duplicados y errores. Indicá el total procesado.${arc}`,
+    soporte:       () => `Sos el asistente de Geo Tax SAS. Respondé esta consulta de Red Intercable de forma profesional: ${document.getElementById('chatInput')?.value || '¿Cuáles son los vencimientos impositivos de este mes?'}`,
+    corporativo:   () => `Sos el asistente de Geo Tax SAS, experto en impuestos y contabilidad argentina. Respondé esta consulta de forma clara y precisa: ${document.getElementById('chatInput')?.value || '¿Cuáles son las alícuotas de IIBB para servicios en Buenos Aires?'}`,
+  };
+  return (map[key] || map.corporativo)();
+}
+
+// ─── RUN AGENT (Claude API) ──────────────────────────────────────────────────
+async function runAgent(key) {
+  const a = agentList.find(x => x.key === key);
+  const overlay = document.getElementById('processingOverlay');
+  const stepsEl = document.getElementById('processingSteps');
+  stepsEl.innerHTML = a.steps.map(s => `<div class="p-step"><div class="p-dot"></div><span>${s}</span></div>`).join('');
+  overlay.classList.add('show');
+  let i = 0;
+  const steps = stepsEl.querySelectorAll('.p-step');
+  function animateSteps() {
+    if (i > 0) { steps[i-1].classList.remove('active-step'); steps[i-1].classList.add('done'); }
+    if (i < steps.length - 1) { steps[i].classList.add('active-step'); i++; setTimeout(animateSteps, 800); }
+    else { steps[i].classList.add('active-step'); }
+  }
+  animateSteps();
+  try {
+    const isConciliacion = key === 'conciliacion';
+    const response = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: isConciliacion ? 6000 : 2048,
+        messages: [{ role:'user', content:buildPrompt(key) }]
+      })
+    });
+    const data = await response.json();
+    overlay.classList.remove('show');
+    const rawResult = data.content?.[0]?.text || 'Error: ' + JSON.stringify(data.error);
+
+    // ── Conciliación: extraer JSON y construir Excel ──────────────────────────
+    if (isConciliacion) {
+      try {
+        const concData = extractJSON(rawResult);
+        lastConciliacionResult = {
+          wb: buildConciliacionWorkbook(concData),
+          data: concData,
+          fecha: new Date()
+        };
+        const ob = document.getElementById('outputBox');
+        if (ob) {
+          const d = concData;
+          const fmtM = v => typeof v === 'number' ? Math.round(v).toLocaleString('es-AR') : '—';
+          ob.innerHTML = markdownToHtml(
+            `## ✅ Conciliación generada\n\n` +
+            `**Empresa:** ${d.empresa}  \n**Cuenta:** ${d.cuenta}  \n**Período:** ${d.periodo}\n\n` +
+            `---\n\n` +
+            `**Saldo final extracto:** $${fmtM(d.resumen?.saldoFinalExtracto)}  \n` +
+            `**Saldo ajustado:** $${fmtM(d.resumen?.saldoAjustado)}  \n` +
+            `**Diferencia pendiente:** $${fmtM(d.resumen?.diferenciaPendiente)}\n\n` +
+            `---\n\n` +
+            `**Partidas A** (banco, no libros): ${d.partidas?.A?.length || 0} items  \n` +
+            `**Partidas B** (libros, no banco): ${d.partidas?.B?.length || 0} items  \n` +
+            `**Alertas detectadas:** ${d.alertas?.length || 0}\n\n` +
+            (d.resumen?.explicacion ? `*${d.resumen.explicacion}*` : '')
+          );
+          ob.classList.add('has-content');
+          ob.style.whiteSpace = 'normal';
+          ob._rawText = rawResult;
+        }
+        const oa = document.getElementById('outputActions');
+        if (oa) oa.style.display = 'flex';
+        showToast('✅ Excel listo', 'Hacé clic en "Descargar Excel" para obtener el reporte completo.');
+      } catch(jsonErr) {
+        console.warn('[Conciliacion] JSON parse error:', jsonErr);
+        // Fallback: mostrar texto plano
+        const ob = document.getElementById('outputBox');
+        if (ob) { ob.innerHTML = markdownToHtml(rawResult); ob.classList.add('has-content'); ob.style.whiteSpace='normal'; ob._rawText=rawResult; }
+        const oa = document.getElementById('outputActions');
+        if (oa) oa.style.display = 'flex';
+        showToast('⚠️ Reporte generado', 'El Excel estructurado no pudo generarse, descargá el TXT.');
+      }
+      return;
+    }
+
+    // ── Resto de agentes ─────────────────────────────────────────────────────
+    const ob = document.getElementById('outputBox');
+    if (ob) {
+      ob.innerHTML = markdownToHtml(rawResult);
+      ob.classList.add('has-content');
+      ob.style.whiteSpace = 'normal';
+      ob._rawText = rawResult;
+    }
+    const oa = document.getElementById('outputActions');
+    if (oa) oa.style.display = 'flex';
+    showToast('✅ ¡Completado!', 'Resultado generado por Claude AI.');
+  } catch(err) {
+    overlay.classList.remove('show');
+    const ob = document.getElementById('outputBox');
+    if (ob) ob.textContent = 'Error: ' + err.message;
+    showToast('❌ Error', 'No se pudo conectar con Claude API.');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONCILIACIÓN BANCARIA — Excel profesional generado desde JSON de Claude
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** Extrae el objeto JSON de la respuesta de Claude (maneja ```json...``` y JSON crudo) */
+function extractJSON(text) {
+  // Busca bloque ```json ... ```
+  const blockMatch = text.match(/```json\s*([\s\S]+?)\s*```/i);
+  if (blockMatch) return JSON.parse(blockMatch[1]);
+  // Busca el primer objeto { ... } de forma amplia
+  const objMatch = text.match(/\{[\s\S]+\}/);
+  if (objMatch) return JSON.parse(objMatch[0]);
+  throw new Error('No se encontró JSON en la respuesta.');
+}
+
+/** Construye el Excel de conciliación en el estilo del modelo */
+function buildConciliacionWorkbook(d) {
+  const wb   = XLSX.utils.book_new();
+  const rows = [];
+  const fmtN = v => (typeof v === 'number' && !isNaN(v)) ? Math.round(v * 100) / 100 : '';
+
+  // Helpers de construcción
+  const addSec  = t => rows.push([t, '', '', '']);             // sección principal
+  const addSub  = t => rows.push(['', t, '', '']);             // subsección
+  const addTx   = (f, c, db, cr) => rows.push([f||'', c||'', fmtN(db), fmtN(cr)]); // transacción
+  const addTot  = (c, db, cr)    => rows.push(['', c||'', fmtN(db), fmtN(cr)]);   // total/subtotal
+  const blank   = ()             => rows.push(['', '', '', '']);
+
+  // ── ENCABEZADO ─────────────────────────────────────────────────────────────
+  rows.push([`${d.empresa || 'Red Intercable'}`, '', '', '']);
+  rows.push([`CONCILIACION BANCARIA - ${d.cuenta || ''}`, '', '', '']);
+  rows.push([`Periodo: ${d.periodo || ''}`, '', '', '']);
+  blank();
+  rows.push(['Fecha', 'Concepto', 'Debito ($)', 'Credito ($)']);
+
+  // ── SALDO SEGUN EXTRACTO BANCARIO ──────────────────────────────────────────
+  addSec('SALDO SEGUN EXTRACTO BANCARIO');
+  if (d.extracto?.saldoInicial)
+    addTx(d.extracto.saldoInicial.fecha, 'Saldo inicial según extracto bancario', '', d.extracto.saldoInicial.importe);
+
+  if (d.extracto?.creditos?.length) {
+    addSub('(+) Créditos del período');
+    d.extracto.creditos.forEach(t => addTx(t.fecha, t.concepto, '', t.importe));
+  }
+  if (d.extracto?.debitos?.length) {
+    addSub('(-) Débitos del período');
+    d.extracto.debitos.forEach(t => addTx(t.fecha, t.concepto, t.importe, ''));
+  }
+  if (d.extracto?.saldoFinal)
+    addTot(`Saldo final según extracto bancario al ${d.extracto.saldoFinal.fecha}`, '', d.extracto.saldoFinal.importe);
+  blank();
+
+  // ── SALDO SEGUN LIBROS CONTABLES ───────────────────────────────────────────
+  addSec('SALDO SEGUN LIBROS CONTABLES');
+  if (d.libros?.saldoInicial)
+    addTx(d.libros.saldoInicial.fecha, 'Saldo inicial según mayor contable', '', d.libros.saldoInicial.importe);
+
+  if (d.libros?.creditos?.length) {
+    addSub('(+) Débitos del mayor (cobros / entradas)');
+    d.libros.creditos.forEach(t => addTx(t.fecha, t.concepto, '', t.importe));
+  }
+  if (d.libros?.debitos?.length) {
+    addSub('(-) Créditos del mayor (pagos / salidas)');
+    d.libros.debitos.forEach(t => addTx(t.fecha, t.concepto, t.importe, ''));
+  }
+  if (d.libros?.saldoFinal)
+    addTot(`Saldo final según mayor contable`, '', d.libros.saldoFinal.importe);
+  blank();
+
+  // ── PARTIDAS DE CONCILIACIÓN ───────────────────────────────────────────────
+  addSec('PARTIDAS DE CONCILIACION');
+
+  // A) Débitos bancarios no registrados en libros
+  addSub('A) Débitos bancarios no registrados en libros');
+  const pA = d.partidas?.A || [];
+  pA.forEach(p => addTx(p.fecha, p.concepto, p.debito||'', p.credito||''));
+  const totA_deb = pA.reduce((s,p)=>s+(p.debito||0),0);
+  const totA_cre = pA.reduce((s,p)=>s+(p.credito||0),0);
+  addTot('SUBTOTAL A) Débitos bancarios no registrados en libros', totA_deb||'', totA_cre||'');
+  blank();
+
+  // B) Partidas en libros sin reflejo bancario
+  addSub('B) Partidas en libros sin reflejo bancario');
+  const pB = d.partidas?.B || [];
+  pB.forEach(p => addTx(p.fecha, p.concepto, '', p.importe));
+  const totB = pB.reduce((s,p)=>s+(p.importe||0),0);
+  addTot('SUBTOTAL B) Partidas en libros sin reflejo bancario', '', totB||'');
+  blank();
+
+  // C) Diferencias de fecha
+  const pC = d.partidas?.C || [];
+  if (pC.length) {
+    addSub('C) Diferencias de fecha - misma operación en distintas fechas');
+    pC.forEach(p => addTx(
+      `${p.fechaBanco||''}\n${p.fechaLibros||''}`,
+      p.concepto, p.debito||'', p.credito||''
+    ));
+    const totC_d = pC.reduce((s,p)=>s+(p.debito||0),0);
+    const totC_c = pC.reduce((s,p)=>s+(p.credito||0),0);
+    addTot('SUBTOTAL C) Diferencias de timing', totC_d||'', totC_c||'');
+    blank();
+  }
+
+  // ── ALERTAS ────────────────────────────────────────────────────────────────
+  const alertas = d.alertas || [];
+  if (alertas.length) {
+    addSec('ALERTAS ESPECIALES DEL PERIODO');
+    alertas.forEach(a => addTx(
+      a.fecha,
+      a.concepto,
+      (a.importe > 0 ? a.importe : ''),
+      (a.importe < 0 ? Math.abs(a.importe) : '')
+    ));
+    blank();
+  }
+
+  // ── RESUMEN ────────────────────────────────────────────────────────────────
+  addSec('RESUMEN DE CONCILIACION');
+  const r = d.resumen || {};
+  addTot(`Saldo final según extracto bancario al cierre`, '', r.saldoFinalExtracto);
+  addTot(`(+) A) Débitos bancarios no registrados en libros (neto)`, r.subtotalA, '');
+  addTot(`(-) B) Partidas en libros sin reflejo bancario (neto créditos)`, '', r.subtotalB);
+  addTot(`(=) Saldo ajustado por partidas del período`, '', r.saldoAjustado);
+  blank();
+  if (r.diferenciaPendiente !== undefined)
+    rows.push([
+      `DIFERENCIA PENDIENTE (Mayor - Banco): $${Math.abs(r.diferenciaPendiente||0).toLocaleString('es-AR')}\n${r.explicacion||''}`,
+      '', '', ''
+    ]);
+  blank();
+  rows.push([`Conciliación preparada por Geo Tax SAS — ${new Date().toLocaleDateString('es-AR')}`, '', '', '']);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{ wch:22 }, { wch:78 }, { wch:18 }, { wch:18 }];
+  XLSX.utils.book_append_sheet(wb, ws, 'Conciliación Bancaria');
+  return wb;
+}
+
+// RIC TREASURY MATCHING AGENT — Procesamiento 100% local con SheetJS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** Convierte un valor de celda de Excel a Date JS */
+function xlDateToJS(val) {
+  if (!val) return null;
+  if (val instanceof Date) return val;
+  if (typeof val === 'number' && val > 1000) {
+    // Serial de Excel: 1 = 01/01/1900, offset 25569 para epoch Unix
+    return new Date(Math.round((val - 25569) * 86400 * 1000));
+  }
+  if (typeof val === 'string') {
+    const d = new Date(val);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
+}
+
+/** Resta N días hábiles a una fecha (lunes–viernes, sin festivos) */
+function subtractBusinessDays(date, days) {
+  const d = new Date(date);
+  let removed = 0;
+  while (removed < days) {
+    d.setDate(d.getDate() - 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) removed++;
+  }
+  return d;
+}
+
+/** Formatea Date a dd/mm/aaaa */
+function fmtDate(d) {
+  if (!d || !(d instanceof Date) || isNaN(d.getTime())) return '—';
+  return d.toLocaleDateString('es-AR');
+}
+
+/** Formatea número a $ con separadores argentinos */
+function fmtPesos(n) {
+  if (typeof n !== 'number' || isNaN(n)) return '—';
+  return Math.round(n).toLocaleString('es-AR');
+}
+
+/** Parsea el Excel de cheques (pestaña "BAS 2024 y ss") */
+function parseChequesFromXlsx(uint8) {
+  const wb = XLSX.read(uint8, { type: 'array', cellDates: true });
+  const sheetName = 'BAS 2024 y ss';
+  if (!wb.SheetNames.includes(sheetName)) {
+    throw new Error(`Pestaña "${sheetName}" no encontrada.\nPestañas disponibles: ${wb.SheetNames.join(', ')}`);
+  }
+  const ws = wb.Sheets[sheetName];
+  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
+
+  // Buscar fila de headers (contiene 'Fechaacr')
+  let hi = -1;
+  for (let i = 0; i < Math.min(rows.length, 10); i++) {
+    if (rows[i] && rows[i].some(c => c === 'Fechaacr')) { hi = i; break; }
+  }
+  if (hi === -1) hi = 4; // fallback: fila 5
+
+  const headers = rows[hi];
+  const idx = {
+    banco:    headers.indexOf('AuxBanco'),
+    numChq:   headers.indexOf('AuxNumero'),
+    fechaAcr: headers.indexOf('Fechaacr'),
+    nombre:   headers.indexOf('Nombre'),
+    importe:  headers.indexOf('Importe'),
+  };
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const cheques = [];
+
+  for (let i = hi + 1; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row) continue;
+    const fechaAcr = xlDateToJS(row[idx.fechaAcr]);
+    if (!fechaAcr || isNaN(fechaAcr.getTime())) continue;
+    if (fechaAcr < today) continue; // solo cheques futuros
+    const importe = parseFloat(row[idx.importe]);
+    if (isNaN(importe) || importe <= 0) continue;
+
+    // Fecha de endorso = 2 días hábiles antes de la acreditación
+    const fechaEndoso = subtractBusinessDays(fechaAcr, 2);
+
+    cheques.push({
+      banco:       String(row[idx.banco]  || ''),
+      numChq:      String(row[idx.numChq] || ''),
+      fechaEndoso: fechaEndoso,
+      fechaAcr:    fechaAcr,
+      nombre:      String(row[idx.nombre] || ''),
+      importe:     importe,
+      disponible:  importe,
+    });
+  }
+
+  cheques.sort((a, b) => a.fechaAcr - b.fechaAcr);
+  return cheques;
+}
+
+/** Parsea el Excel de proveedores (primera pestaña, pesos, saldo > 0) */
+function parseFacturasFromXlsx(uint8) {
+  const wb = XLSX.read(uint8, { type: 'array', cellDates: true });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
+
+  const headers = rows[0];
+  const idx = {
+    nombre:   headers.indexOf('Nombre'),
+    tipo:     headers.indexOf('Codcmp'),
+    prefijo:  headers.indexOf('PrefijoExt'),
+    numero:   headers.indexOf('NumeroExt'),
+    vto:      headers.indexOf('Vto'),
+    saldo:    headers.indexOf('Saldo'),
+    simbolo:  headers.indexOf('Simbolo'),
+    obs:      headers.indexOf('Observacion'),
+  };
+
+  const farFuture = new Date(2099, 0, 1);
+  const facturas = [];
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row) continue;
+    const saldo = parseFloat(row[idx.saldo]);
+    if (isNaN(saldo) || saldo <= 1000) continue;
+    const sim = String(row[idx.simbolo] || '');
+    if (!sim.includes('$')) continue; // solo pesos
+
+    let vto = xlDateToJS(row[idx.vto]);
+    if (!vto || isNaN(vto.getTime())) vto = farFuture;
+
+    facturas.push({
+      proveedor:  String(row[idx.nombre] || ''),
+      tipo:       String(row[idx.tipo]   || ''),
+      factura:    `${row[idx.prefijo] || ''}-${row[idx.numero] || ''}`,
+      vto:        vto,
+      saldo:      saldo,
+      pendiente:  saldo,
+      obs:        String(row[idx.obs] || '').substring(0, 80),
+    });
+  }
+
+  facturas.sort((a, b) => a.vto - b.vto);
+  return facturas;
+}
+
+/** Algoritmo de matching cheques × facturas */
+function doMatching(cheques, facturas) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const asignaciones = [];
+
+  for (const fac of facturas) {
+    if (fac.pendiente <= 0) continue;
+
+    // Preferir cheques cuya acreditación es anterior o igual al vencimiento
+    const antesVto = cheques.filter(c => c.disponible > 0 && c.fechaAcr <= fac.vto);
+    const candidatos = antesVto.length > 0
+      ? antesVto
+      : cheques.filter(c => c.disponible > 0).slice(0, 15);
+
+    for (const chq of candidatos) {
+      if (fac.pendiente <= 0) break;
+      if (chq.disponible <= 0) continue;
+
+      const asignado = Math.min(fac.pendiente, chq.disponible);
+      fac.pendiente -= asignado;
+      chq.disponible -= asignado;
+
+      const diffDias = Math.round((chq.fechaAcr - fac.vto) / 86400000);
+
+      asignaciones.push({
+        proveedor:    fac.proveedor,
+        factura:      fac.factura,
+        tipo:         fac.tipo,
+        vto:          fac.vto,
+        importeFac:   fac.saldo,
+        banco:        chq.banco,
+        numChq:       chq.numChq,
+        nombreLibr:   chq.nombre,
+        fechaEndoso:  chq.fechaEndoso,
+        fechaAcr:     chq.fechaAcr,
+        importeAsign: asignado,
+        diffDias:     diffDias,
+        vencida:      fac.vto < today,
+      });
+    }
+  }
+
+  return asignaciones;
+}
+
+/** Genera el Excel de 4 hojas y devuelve el workbook (sin descargar) */
+function buildTreasuryWorkbook(asignaciones, cheques, facturas, caja = 0, activos = 0) {
+  const today = new Date();
+  const wb = XLSX.utils.book_new();
+  const fmtD = d => fmtDate(d);
+  const fmtN = n => (typeof n === 'number' ? Math.round(n) : n);
+
+  // ── HOJA 1: Propuesta de Pago ──────────────────────────────────────────────
+  const h1 = [
+    ['RIC TREASURY MATCHING AGENT — Propuesta de Pago'],
+    [`Generado: ${today.toLocaleDateString('es-AR')} | Geo Tax SAS para Red Intercable Satelital S.A.`],
+    [],
+    ['Proveedor','Factura','Tipo','Vencimiento','Importe Factura ($)','Cheque Asignado','Banco','Fecha Endorso','Fecha Acreditación','Importe Asignado ($)'],
+    ...asignaciones.map(a => [
+      a.proveedor,
+      a.factura,
+      a.tipo,
+      fmtD(a.vto),
+      fmtN(a.importeFac),
+      a.numChq,
+      a.banco,
+      fmtD(a.fechaEndoso),
+      fmtD(a.fechaAcr),
+      fmtN(a.importeAsign),
+    ])
+  ];
+  const ws1 = XLSX.utils.aoa_to_sheet(h1);
+  ws1['!cols'] = [{wch:38},{wch:14},{wch:6},{wch:14},{wch:22},{wch:16},{wch:24},{wch:16},{wch:18},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'Propuesta de Pago');
+
+  // ── HOJA 2: Resumen Ejecutivo ──────────────────────────────────────────────
+  const totalFac   = facturas.reduce((s,f) => s + f.saldo, 0);
+  const cubierto   = asignaciones.reduce((s,a) => s + a.importeAsign, 0);
+  const pendiente  = facturas.reduce((s,f) => s + f.pendiente, 0);
+  const liquidez   = cheques.reduce((s,c) => s + c.disponible, 0);
+  const facVenc    = facturas.filter(f => f.vto < today);
+  const pct        = totalFac > 0 ? (cubierto / totalFac * 100).toFixed(1) : 0;
+  const chqUsados  = new Set(asignaciones.map(a => a.numChq)).size;
+
+  const capacidadTotal = cubierto + caja + activos;
+  const brechaReal     = Math.max(0, totalFac - capacidadTotal);
+  const pctCapacidad   = totalFac > 0 ? (capacidadTotal / totalFac * 100).toFixed(1) : '100.0';
+
+  const h2 = [
+    ['RESUMEN EJECUTIVO — TESORERÍA'],
+    [],
+    ['CAPACIDAD DE PAGO TOTAL', ''],
+    ['Total obligaciones en $',                 fmtN(totalFac)],
+    ['Cubierto con cheques ($)',                fmtN(cubierto)],
+    ['Posición en caja ($)',                    fmtN(caja)],
+    ['Activos disponibles ($)',                 fmtN(activos)],
+    ['Capacidad total de pago ($)',             fmtN(capacidadTotal)],
+    ['Brecha real de financiamiento ($)',       fmtN(brechaReal)],
+    ['Cobertura total %',                      `${pctCapacidad}%`],
+    [],
+    ['CHEQUES', ''],
+    ['Total cheques disponibles (desde hoy)',   cheques.length],
+    ['Cheques utilizados',                     chqUsados],
+    ['Cheques con saldo sobrante',             cheques.filter(c=>c.disponible>0&&c.disponible<c.importe).length],
+    ['Liquidez restante en cheques ($)',       fmtN(liquidez)],
+    ['Cobertura sólo con cheques %',          `${pct}%`],
+    [],
+    ['FACTURAS', ''],
+    ['Total facturas analizadas',              facturas.length],
+    ['Facturas vencidas',                      facVenc.length],
+    ['Facturas sin cubrir (total o parcial)',  facturas.filter(f=>f.pendiente>0).length],
+    ['Importe total vencido ($)',              fmtN(facVenc.reduce((s,f)=>s+f.saldo,0))],
+  ];
+  const ws2 = XLSX.utils.aoa_to_sheet(h2);
+  ws2['!cols'] = [{wch:44},{wch:24}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Resumen Ejecutivo');
+
+  // ── HOJA 3: Alertas ────────────────────────────────────────────────────────
+  const alertas = [['Severidad','Descripción','Importe ($)','Proveedor']];
+
+  if (pendiente > 0)
+    alertas.push(['🔴 CRÍTICO', `Brecha de financiamiento: cheques cubren solo el ${pct}% de las obligaciones`, fmtN(pendiente), 'Red Intercable SA']);
+
+  facturas.filter(f=>f.vto<today&&f.pendiente>0)
+    .sort((a,b)=>b.pendiente-a.pendiente).slice(0,10)
+    .forEach(f => {
+      const dias = Math.round((today-f.vto)/86400000);
+      alertas.push(['🔴 VENCIDA', `${f.proveedor} — ${dias} días vencida | Fac ${f.factura}`, fmtN(f.pendiente), f.proveedor.substring(0,30)]);
+    });
+
+  if (liquidez === 0)
+    alertas.push(['🟡 LIQUIDEZ', 'Todos los cheques disponibles fueron consumidos. No hay liquidez remanente.', 0, '—']);
+
+  // Top 5 proveedores por concentración
+  const porProv = {};
+  facturas.forEach(f => { porProv[f.proveedor] = (porProv[f.proveedor]||0) + f.saldo; });
+  Object.entries(porProv).sort((a,b)=>b[1]-a[1]).slice(0,5).forEach(([p,m]) =>
+    alertas.push(['🟠 CONCENTRACIÓN', `Alta concentración de deuda: ${p.substring(0,45)}`, fmtN(m), p.substring(0,30)])
+  );
+
+  const ws3 = XLSX.utils.aoa_to_sheet(alertas);
+  ws3['!cols'] = [{wch:18},{wch:72},{wch:18},{wch:35}];
+  XLSX.utils.book_append_sheet(wb, ws3, 'Alertas');
+
+  // ── HOJA 4: Lineamiento ────────────────────────────────────────────────────
+  const linRows = [
+    ['LINEAMIENTO DE TESORERÍA — Posición consolidada de instrumentos financieros'],
+    [`Generado: ${today.toLocaleDateString('es-AR')} | Geo Tax SAS para Red Intercable Satelital S.A.`],
+    [],
+    ['Fecha','Tipo','Concepto','Saldo ($)'],
+  ];
+
+  // Cheques asignados (ingresos → positivo)
+  const chqUsadosSet = new Set(asignaciones.map(a => a.numChq));
+  const chqDeduped = [];
+  const seen = new Set();
+  for (const chq of cheques) {
+    if (!seen.has(chq.numChq) && chqUsadosSet.has(chq.numChq)) {
+      seen.add(chq.numChq);
+      const asignado = asignaciones.filter(a => a.numChq === chq.numChq).reduce((s,a) => s + a.importeAsign, 0);
+      linRows.push([fmtD(chq.fechaAcr), 'Cheque', `${chq.banco} — N° ${chq.numChq}`, fmtN(asignado)]);
+    }
+  }
+
+  // Facturas pendientes (obligaciones → negativo)
+  for (const fac of facturas) {
+    if (fac.saldo > 0) {
+      linRows.push([fmtD(fac.vto), 'Factura', `${fac.proveedor} — ${fac.factura}`, fmtN(-fac.saldo)]);
+    }
+  }
+
+  // Posición de caja (sólo si el usuario la ingresó)
+  if (caja !== 0) {
+    linRows.push([today.toLocaleDateString('es-AR'), 'Caja', 'Posición de caja actual', fmtN(caja)]);
+  }
+
+  // Activos disponibles
+  if (activos !== 0) {
+    linRows.push([today.toLocaleDateString('es-AR'), 'Activos', 'Activos disponibles', fmtN(activos)]);
+  }
+
+  // Fila de NETO
+  const netoTotal = asignaciones.reduce((s,a) => s + a.importeAsign, 0)
+    - facturas.reduce((s,f) => s + f.saldo, 0)
+    + caja + activos;
+  linRows.push([], ['', '', 'NETO', fmtN(netoTotal)]);
+
+  const ws4 = XLSX.utils.aoa_to_sheet(linRows);
+  ws4['!cols'] = [{wch:14},{wch:12},{wch:55},{wch:20}];
+  XLSX.utils.book_append_sheet(wb, ws4, 'Lineamiento');
+
+  return { wb, stats: {
+    totalFac, cubierto, pendiente, pct, liquidez, chqUsados,
+    facVenc: facVenc.length, sinCubrir: facturas.filter(f=>f.pendiente>0).length,
+    totalCheques: cheques.length, asignaciones: asignaciones.length,
+    caja, activos, capacidadTotal, brechaReal, pctCapacidad
+  } };
+}
+
+/** Ejecuta el agente de tesorería completo */
+async function runTreasury() {
+  if (!uploadedFiles['cheques']) {
+    showToast('⚠️ Falta archivo', 'Subí primero el Excel de cheques en cartera.');
+    return;
+  }
+  if (!uploadedFiles['proveedores']) {
+    showToast('⚠️ Falta archivo', 'Subí primero el Excel de proveedores.');
+    return;
+  }
+
+  const a = agentList.find(x => x.key === 'pagos');
+  const overlay  = document.getElementById('processingOverlay');
+  const stepsEl  = document.getElementById('processingSteps');
+  stepsEl.innerHTML = a.steps.map(s => `<div class="p-step"><div class="p-dot"></div><span>${s}</span></div>`).join('');
+  overlay.classList.add('show');
+
+  let si = 0;
+  const stepEls = stepsEl.querySelectorAll('.p-step');
+  function nextStep() {
+    if (si > 0) { stepEls[si-1].classList.remove('active-step'); stepEls[si-1].classList.add('done'); }
+    if (si < stepEls.length) { stepEls[si].classList.add('active-step'); si++; }
+  }
+  nextStep();
+
+  // Pequeño delay para que el UI se actualice antes del procesamiento pesado
+  await new Promise(r => setTimeout(r, 50));
+
+  try {
+    // Paso 1: parsear cheques
+    nextStep();
+    const cheques = parseChequesFromXlsx(uploadedFiles['cheques'].data);
+    if (cheques.length === 0) throw new Error('No se encontraron cheques con fecha de acreditación futura y monto positivo.');
+
+    await new Promise(r => setTimeout(r, 200));
+
+    // Paso 2: parsear facturas
+    nextStep();
+    const facturas = parseFacturasFromXlsx(uploadedFiles['proveedores'].data);
+    if (facturas.length === 0) throw new Error('No se encontraron facturas pendientes en pesos.');
+
+    await new Promise(r => setTimeout(r, 200));
+
+    // Paso 3: matching
+    nextStep();
+    const asignaciones = doMatching(cheques, facturas);
+
+    await new Promise(r => setTimeout(r, 200));
+
+    // Paso 4: construir workbook
+    nextStep();
+    const caja    = parseFloat(document.getElementById('inputCaja')?.value)    || 0;
+    const activos = parseFloat(document.getElementById('inputActivos')?.value) || 0;
+    const { wb, stats } = buildTreasuryWorkbook(asignaciones, cheques, facturas, caja, activos);
+    lastTreasuryResult = { wb, stats, fecha: new Date() };
+
+    // Último paso
+    if (si < stepEls.length) { stepEls[si-1].classList.remove('active-step'); stepEls[si-1].classList.add('done'); }
+
+    overlay.classList.remove('show');
+
+    // Mostrar resultados en pantalla
+    const pctNum = parseFloat(stats.pct);
+    const colorCob = pctNum >= 80 ? 'green' : pctNum >= 50 ? 'orange' : 'red';
+
+    const pctCap = parseFloat(stats.pctCapacidad);
+    const colorCap = pctCap >= 100 ? 'green' : pctCap >= 70 ? 'orange' : 'red';
+    const cajaLine   = stats.caja    > 0 ? `<div class="kpi-item"><div class="kpi-label">Posición en caja ($)</div><div class="kpi-value">${fmtPesos(stats.caja)}</div></div>` : '';
+    const activoLine = stats.activos > 0 ? `<div class="kpi-item"><div class="kpi-label">Activos disponibles ($)</div><div class="kpi-value">${fmtPesos(stats.activos)}</div></div>` : '';
+
+    document.getElementById('treasuryKpis').innerHTML = `
+      <div class="kpi-item"><div class="kpi-label">Cheques procesados</div><div class="kpi-value green">${cheques.length.toLocaleString('es-AR')}</div></div>
+      <div class="kpi-item"><div class="kpi-label">Facturas analizadas</div><div class="kpi-value">${facturas.length.toLocaleString('es-AR')}</div></div>
+      <div class="kpi-item"><div class="kpi-label">Asignaciones generadas</div><div class="kpi-value green">${stats.asignaciones.toLocaleString('es-AR')}</div></div>
+      <div class="kpi-item"><div class="kpi-label">Cobertura (sólo cheques)</div><div class="kpi-value ${colorCob}">${stats.pct}%</div></div>
+      <div class="kpi-item"><div class="kpi-label">Total cubierto con cheques ($)</div><div class="kpi-value green">${fmtPesos(stats.cubierto)}</div></div>
+      ${cajaLine}${activoLine}
+      <div class="kpi-item"><div class="kpi-label">Capacidad total de pago ($)</div><div class="kpi-value ${colorCap}">${fmtPesos(stats.capacidadTotal)}</div></div>
+      <div class="kpi-item"><div class="kpi-label">Brecha real ($)</div><div class="kpi-value ${stats.brechaReal > 0 ? 'red' : 'green'}">${stats.brechaReal > 0 ? fmtPesos(stats.brechaReal) : '✔ Sin brecha'}</div></div>
+      <div class="kpi-item"><div class="kpi-label">Cobertura total %</div><div class="kpi-value ${colorCap}">${stats.pctCapacidad}%</div></div>
+    `;
+    document.getElementById('treasuryResult').classList.add('show');
+
+    showToast('✅ ¡Propuesta lista!', `${stats.asignaciones} asignaciones · ${stats.pct}% de cobertura`);
+
+  } catch(err) {
+    overlay.classList.remove('show');
+    showToast('❌ Error', err.message);
+    console.error('[Treasury]', err);
+  }
+}
+
+/** Descarga el output del acta como archivo Word (.doc) */
+function downloadWord(name) {
+  const ob = document.getElementById('outputBox');
+  if (!ob || (!ob._rawText && !ob.innerText.trim())) {
+    showToast('⚠️ Sin contenido', 'Generá el acta primero.');
+    return;
+  }
+  const rawText = ob._rawText || ob.innerText;
+  const lines = rawText.split('\n');
+  const bodyHtml = lines.map(l => `<p>${l.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') || '&nbsp;'}</p>`).join('\n');
+  const docHtml = `<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>${name}</title>
+  <!--[if gte mso 9]><xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+      <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+  </xml><![endif]-->
+  <style>
+    @page { margin: 2.5cm; }
+    body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.6; color: #000; }
+    p { margin: 0 0 6pt 0; }
+  </style>
+</head>
+<body>
+${bodyHtml}
+</body>
+</html>`;
+  const blob = new Blob([docHtml], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${name}_${new Date().toISOString().split('T')[0]}.doc`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('📄 Word descargado', `${name}_${new Date().toISOString().split('T')[0]}.doc`);
+}
+
+/** Descarga el Excel generado */
+function downloadTreasuryExcel() {
+  if (!lastTreasuryResult) {
+    showToast('⚠️ Sin datos', 'Generá la propuesta primero.');
+    return;
+  }
+  const fecha = lastTreasuryResult.fecha.toISOString().split('T')[0].replace(/-/g,'');
+  XLSX.writeFile(lastTreasuryResult.wb, `RIC_Propuesta_Pago_${fecha}.xlsx`);
+  showToast('📊 Excel descargado', 'RIC_Propuesta_Pago_' + fecha + '.xlsx');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// BI DASHBOARD AGENT — SheetJS (local) + Claude Haiku (commentary)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** Parsea el Tablero BI.xlsx y devuelve todos los datos para el dashboard */
+function parseBIExcel(uint8) {
+  const wb = XLSX.read(uint8, { type:'array', cellDates:false });
+
+  const num = v => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
+  const findRow = (rows, kw) => rows.find(r => r && r[0] && String(r[0]).toLowerCase().includes(kw.toLowerCase()));
+
+  // ─── Indicadores Clave ─────────────────────────────────────────────────────
+  const wsInd  = wb.Sheets['Indicadores Clave'];
+  const rInd   = wsInd ? XLSX.utils.sheet_to_json(wsInd, { header:1, defval:null }) : [];
+
+  const rIngCuota = findRow(rInd, 'ingreso');
+  const rUtilOp   = findRow(rInd, 'utilidad operativa');
+  const rFinanc   = findRow(rInd, 'resultado');
+
+  const kpis = {
+    ingrYTD:   rIngCuota ? num(rIngCuota[1]) : 0,
+    ingrMes:   rIngCuota ? num(rIngCuota[2]) : 0,
+    utilOpYTD: rUtilOp   ? num(rUtilOp[1])   : 0,
+    utilOpMes: rUtilOp   ? num(rUtilOp[2])   : 0,
+    financYTD: rFinanc   ? num(rFinanc[1])   : 0,
+  };
+
+  // Deudores
+  const debtors = [];
+  ['critico','moroso','regular','sin facturac'].forEach(kw => {
+    const r = findRow(rInd, kw);
+    if (r) {
+      let pctStr = '';
+      if (r[2] != null) {
+        pctStr = typeof r[2] === 'number'
+          ? (r[2] < 1.5 ? (r[2] * 100).toFixed(1) + '%' : r[2].toFixed(1) + '%')
+          : String(r[2]);
+      }
+      debtors.push({ label: String(r[0]), monto: num(r[1]), pct: pctStr });
+    }
+  });
+
+  // ─── Economico nuevo ──────────────────────────────────────────────────────
+  const wsEco  = wb.Sheets['Economico nuevo'];
+  const rEco   = wsEco ? XLSX.utils.sheet_to_json(wsEco, { header:1, defval:null }) : [];
+
+  // Fila de meses: índice 1 (fila 2 en Excel). Col 0 = etiqueta, cols 1+ = meses
+  const hdrRow   = rEco[1] || [];
+  const monthLabels = [];
+  const monthIdxs   = [];
+  hdrRow.forEach((v, i) => {
+    if (i === 0 || v == null) return;
+    const s = String(v).trim().toLowerCase();
+    if (!s || s === 'ytd' || s === 'total') return;
+    // Convierte serial de fecha Excel si es necesario
+    let label;
+    if (typeof v === 'number' && v > 10000) {
+      const d = new Date(Math.round((v - 25569) * 86400 * 1000));
+      label = d.toLocaleDateString('es-AR', { month:'short', year:'2-digit' });
+    } else {
+      label = String(v).trim();
+    }
+    monthLabels.push(label);
+    monthIdxs.push(i);
+  });
+
+  const extractMes = row => row ? monthIdxs.map(i => num(row[i])) : [];
+
+  // Buscar filas clave
+  const rTotalIng = rEco.find(r => r && r[0] &&
+    /total\s*ingreso|^ingresos?\s*total/i.test(String(r[0])));
+  const rUtilOpEco = findRow(rEco, 'utilidad operativa');
+  const rUtilNeta  = findRow(rEco, 'utilidad neta');
+
+  let ingresosMes  = extractMes(rTotalIng);
+  const utilOpMes  = extractMes(rUtilOpEco);
+  const utilNetMes = extractMes(rUtilNeta);
+
+  // Si no hay "Total Ingresos", sumar las líneas de ingreso individuales
+  if (!ingresosMes.length && rUtilOpEco) {
+    const revenueLines = rEco.filter(r => r && r[0] &&
+      /ingresos?\s+cuota|internet|noc|dibox|core|equipos|sumec|otros ingresos/i.test(String(r[0])));
+    if (revenueLines.length) {
+      ingresosMes = monthIdxs.map(i =>
+        revenueLines.reduce((s, row) => s + num(row[i]), 0));
+    }
+  }
+
+  const costosMes = ingresosMes.map((v, i) => v - (utilOpMes[i] || 0));
+
+  // ─── Info financiero ──────────────────────────────────────────────────────
+  const wsInfo  = wb.Sheets['Info financiero'];
+  const rInfo   = wsInfo ? XLSX.utils.sheet_to_json(wsInfo, { header:1, defval:null }) : [];
+
+  const rSaldo    = rInfo.find(r => r && r[0] && /total saldo|saldo total|total de saldo/i.test(String(r[0])));
+  const rCobranza = findRow(rInfo, 'cobranza');
+
+  let saldoActual = 0;
+  if (rSaldo) {
+    const vals = rSaldo.slice(1).filter(v => typeof v === 'number' && !isNaN(v) && v !== 0);
+    if (vals.length) saldoActual = vals[vals.length - 1];
+  }
+  let cobranzaYTD = 0;
+  if (rCobranza) {
+    cobranzaYTD = rCobranza.slice(1).reduce((s, v) =>
+      s + (typeof v === 'number' && !isNaN(v) ? v : 0), 0);
+  }
+
+  return { kpis, debtors, monthLabels, ingresosMes, costosMes, utilOpMes, utilNetMes, saldoActual, cobranzaYTD };
+}
+
+/** Renderiza las 4 tarjetas KPI */
+function renderBIKPIs(data) {
+  const { kpis, ingresosMes, utilOpMes, saldoActual, cobranzaYTD } = data;
+  const fmtM = v => {
+    if (!v && v !== 0) return '—';
+    const abs = Math.abs(v);
+    if (abs >= 1000) return (v / 1000).toFixed(1).replace('.', ',') + ' B';
+    return v.toFixed(1).replace('.', ',') + ' M';
+  };
+  const ingrYTD  = kpis.ingrYTD  || ingresosMes.reduce((s, v) => s + v, 0);
+  const utilYTD  = kpis.utilOpYTD || utilOpMes.reduce((s, v) => s + v, 0);
+  const margin   = ingrYTD > 0 ? (utilYTD / ingrYTD * 100).toFixed(1) : '0.0';
+
+  document.getElementById('biKPIs').innerHTML = `
+    <div class="bi-kpi-card">
+      <div class="bi-kpi-label">Ingresos YTD</div>
+      <div class="bi-kpi-value" style="color:var(--accent)">$ ${fmtM(ingrYTD)}</div>
+      <div class="bi-kpi-sub">Ult. mes: $ ${fmtM(kpis.ingrMes)}</div>
+    </div>
+    <div class="bi-kpi-card">
+      <div class="bi-kpi-label">Utilidad Operativa YTD</div>
+      <div class="bi-kpi-value" style="color:var(--green)">$ ${fmtM(utilYTD)}</div>
+      <div class="bi-kpi-sub">Margen operativo: ${margin}%</div>
+    </div>
+    <div class="bi-kpi-card">
+      <div class="bi-kpi-label">Saldo de Fondos</div>
+      <div class="bi-kpi-value" style="color:var(--orange)">$ ${fmtM(saldoActual)}</div>
+      <div class="bi-kpi-sub">Banco + Inversiones</div>
+    </div>
+    <div class="bi-kpi-card">
+      <div class="bi-kpi-label">Cobranza YTD</div>
+      <div class="bi-kpi-value" style="color:var(--accent)">$ ${fmtM(cobranzaYTD)}</div>
+      <div class="bi-kpi-sub">Recaudación acumulada</div>
+    </div>`;
+}
+
+/** Renderiza gráficos con Chart.js */
+function renderBICharts(data) {
+  const { monthLabels, ingresosMes, costosMes, utilOpMes } = data;
+  const labels = monthLabels.length ? monthLabels : ingresosMes.map((_, i) => 'M' + (i + 1));
+  const axisStyle = { ticks: { color:'#94A3B8', font:{ size:10 } }, grid: { color:'rgba(255,255,255,0.07)' } };
+  const legendStyle = { labels: { color:'#94A3B8', font:{ size:11 }, boxWidth:12 } };
+
+  // Bar chart: Ingresos vs Costos
+  const ctxBar = document.getElementById('chartIngCost');
+  if (ctxBar && ingresosMes.length) {
+    if (biCharts.ingcost) { try { biCharts.ingcost.destroy(); } catch(e){} }
+    biCharts.ingcost = new Chart(ctxBar, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label:'Ingresos', data:ingresosMes, backgroundColor:'rgba(59,130,246,.75)', borderColor:'#3B82F6', borderWidth:1, borderRadius:3 },
+          { label:'Costos',   data:costosMes,   backgroundColor:'rgba(239,68,68,.65)',  borderColor:'#EF4444', borderWidth:1, borderRadius:3 },
+        ]
+      },
+      options: {
+        responsive:true, animation:{ duration:600 },
+        plugins:{ legend:legendStyle, tooltip:{ callbacks:{ label:c=>`${c.dataset.label}: ${c.parsed.y.toFixed(1)} M$` } } },
+        scales:{ x:axisStyle, y:{ ...axisStyle, beginAtZero:false } }
+      }
+    });
+  }
+
+  // Line chart: Utilidad Operativa
+  const ctxLine = document.getElementById('chartUtil');
+  if (ctxLine && utilOpMes.length) {
+    if (biCharts.util) { try { biCharts.util.destroy(); } catch(e){} }
+    biCharts.util = new Chart(ctxLine, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Utilidad Operativa',
+          data: utilOpMes,
+          borderColor: '#10B981',
+          backgroundColor: 'rgba(16,185,129,.12)',
+          tension: .35,
+          fill: true,
+          pointBackgroundColor: '#10B981',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }]
+      },
+      options: {
+        responsive:true, animation:{ duration:600 },
+        plugins:{ legend:legendStyle, tooltip:{ callbacks:{ label:c=>`Utilidad: ${c.parsed.y.toFixed(1)} M$` } } },
+        scales:{ x:axisStyle, y:{ ...axisStyle, beginAtZero:false } }
+      }
+    });
+  }
+}
+
+/** Renderiza la tabla de deudores */
+function renderBIDebtors(data) {
+  const { debtors } = data;
+  const el = document.getElementById('biDebtorTable');
+  if (!el) return;
+  const getColor = lbl => {
+    const l = lbl.toLowerCase();
+    if (l.includes('critico') || l.includes('crítico')) return 'var(--red)';
+    if (l.includes('moroso')) return 'var(--orange)';
+    if (l.includes('regular')) return 'var(--green)';
+    return 'var(--muted)';
+  };
+  const fmtM = v => v ? v.toFixed(1).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' M' : '—';
+  if (!debtors.length) {
+    el.innerHTML = '<tr><td colspan="3" style="padding:12px;color:var(--muted);text-align:center;font-size:12px">Sin datos de deudores en el archivo</td></tr>';
+    return;
+  }
+  el.innerHTML = `
+    <tr>
+      <th>Categoría</th>
+      <th style="text-align:right">Monto ($)</th>
+      <th style="text-align:right">% Cartera</th>
+    </tr>
+    ${debtors.map(d => `
+    <tr>
+      <td style="font-weight:600;color:${getColor(d.label)}">${d.label}</td>
+      <td style="text-align:right;font-weight:600">$ ${fmtM(d.monto)}</td>
+      <td style="text-align:right;color:var(--muted)">${d.pct}</td>
+    </tr>`).join('')}`;
+}
+
+/** Llama a Claude Haiku para el análisis ejecutivo */
+async function fetchBICommentary(data) {
+  const { kpis, ingresosMes, utilOpMes, debtors, saldoActual, cobranzaYTD } = data;
+  const fmtM = v => v ? v.toFixed(1) + ' M' : '0 M';
+
+  const ingrYTD  = kpis.ingrYTD  || ingresosMes.reduce((s, v) => s + v, 0);
+  const utilYTD  = kpis.utilOpYTD || utilOpMes.reduce((s, v) => s + v, 0);
+  const margin   = ingrYTD > 0 ? (utilYTD / ingrYTD * 100).toFixed(1) : 0;
+  const debtStr  = debtors.map(d => `${d.label}: $${fmtM(d.monto)} (${d.pct})`).join(' | ') || 'No disponible';
+
+  const prompt = `Sos el analista financiero de Geo Tax SAS. Analizá los resultados financieros de Red Intercable Satelital S.A. y generá un análisis ejecutivo conciso en exactamente 3 párrafos (máx. 3 oraciones cada uno). Sin títulos, sin listas, solo párrafos corridos.
+
+DATOS FINANCIEROS:
+- Ingresos YTD: $${fmtM(ingrYTD)} | Último mes: $${fmtM(kpis.ingrMes)}
+- Utilidad Operativa YTD: $${fmtM(utilYTD)} | Margen: ${margin}% | Último mes: $${fmtM(kpis.utilOpMes)}
+- Resultados Financieros YTD: $${fmtM(kpis.financYTD)}
+- Saldo de Fondos (Banco + Inversiones): $${fmtM(saldoActual)}
+- Cobranza YTD: $${fmtM(cobranzaYTD)}
+- Cartera de deudores: ${debtStr}
+
+Párrafo 1: Performance operativa (ingresos, margen y tendencia).
+Párrafo 2: Situación de liquidez y fondos disponibles.
+Párrafo 3: Alertas o puntos de atención prioritarios para la gerencia.
+Respondé en español rioplatense, estilo ejecutivo profesional.`;
+
+  try {
+    const resp = await fetch('/api/claude', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:600, messages:[{role:'user',content:prompt}] })
+    });
+    const d = await resp.json();
+    const text = d.content?.[0]?.text || 'No se pudo generar el análisis.';
+    const paras = text.split(/\n{1,}/).filter(p => p.trim().length > 0);
+    document.getElementById('biCommentaryText').innerHTML = paras.map(p => `<p>${p.trim()}</p>`).join('');
+    showToast('🤖 Análisis IA listo', 'Comentario ejecutivo generado.');
+  } catch(err) {
+    document.getElementById('biCommentaryText').innerHTML = `<p style="color:var(--red)">Error al generar análisis: ${err.message}</p>`;
+  }
+}
+
+/** Orquestador principal del agente BI */
+async function runBI() {
+  if (!uploadedFiles['tableroBI']) {
+    showToast('⚠️ Falta archivo', 'Subí primero el Tablero BI.xlsx.');
+    return;
+  }
+  const a = agentList.find(x => x.key === 'resultados');
+  const overlay = document.getElementById('processingOverlay');
+  const stepsEl = document.getElementById('processingSteps');
+  stepsEl.innerHTML = a.steps.map(s => `<div class="p-step"><div class="p-dot"></div><span>${s}</span></div>`).join('');
+  overlay.classList.add('show');
+
+  let si = 0;
+  const stepEls = stepsEl.querySelectorAll('.p-step');
+  function nextStep() {
+    if (si > 0) { stepEls[si-1].classList.remove('active-step'); stepEls[si-1].classList.add('done'); }
+    if (si < stepEls.length) { stepEls[si].classList.add('active-step'); si++; }
+  }
+  nextStep();
+  await new Promise(r => setTimeout(r, 60));
+
+  try {
+    nextStep(); // Procesando P&L
+    const data = parseBIExcel(uploadedFiles['tableroBI'].data);
+    await new Promise(r => setTimeout(r, 250));
+
+    nextStep(); // Calculando KPIs
+    renderBIKPIs(data);
+    renderBIDebtors(data);
+    await new Promise(r => setTimeout(r, 250));
+
+    nextStep(); // Renderizando gráficos
+    // Mostrar dashboard ANTES de crear los charts (canvas debe estar en DOM visible)
+    document.getElementById('biDashboard').classList.add('show');
+    overlay.classList.remove('show');
+    await new Promise(r => setTimeout(r, 150)); // dar tiempo al repaint
+    renderBICharts(data);
+
+    // Análisis ejecutivo asincrónico (no bloquea la UI)
+    document.getElementById('biCommentary').classList.add('show');
+    fetchBICommentary(data);
+
+    showToast('📊 Dashboard listo', 'KPIs y gráficos generados. Análisis IA en proceso...');
+  } catch(err) {
+    overlay.classList.remove('show');
+    showToast('❌ Error', err.message);
+    console.error('[BI Agent]', err);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MARKDOWN → HTML (para formatear respuestas del chat)
+// ═══════════════════════════════════════════════════════════════════════════════
+function markdownToHtml(text) {
+  const lines = text.split('\n');
+  const out   = [];
+  let inUl    = false;
+  let inOl    = false;
+
+  const inline = s => s
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*\n]+?)\*/g,'<em>$1</em>')
+    .replace(/`([^`]+?)`/g,'<code style="background:rgba(255,255,255,.1);padding:1px 6px;border-radius:4px;font-size:.88em;font-family:monospace">$1</code>');
+
+  const closeList = () => {
+    if (inUl) { out.push('</ul>'); inUl = false; }
+    if (inOl) { out.push('</ol>'); inOl = false; }
+  };
+
+  for (const raw of lines) {
+    const line = raw;
+
+    // Encabezados
+    if (/^### (.+)/.test(line)) {
+      closeList();
+      out.push(`<p style="font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 5px">${inline(line.replace(/^### /,''))}</p>`);
+    } else if (/^## (.+)/.test(line)) {
+      closeList();
+      out.push(`<p style="font-size:14px;font-weight:700;color:var(--text);margin:14px 0 6px">${inline(line.replace(/^## /,''))}</p>`);
+    } else if (/^# (.+)/.test(line)) {
+      closeList();
+      out.push(`<p style="font-size:15px;font-weight:700;color:var(--accent);margin:14px 0 8px">${inline(line.replace(/^# /,''))}</p>`);
+
+    // Separador
+    } else if (/^---+$/.test(line.trim())) {
+      closeList();
+      out.push('<hr style="border:none;border-top:1px solid var(--border);margin:12px 0">');
+
+    // Lista desordenada
+    } else if (/^[*\-•] (.+)/.test(line)) {
+      if (inOl) { out.push('</ol>'); inOl = false; }
+      if (!inUl) { out.push('<ul style="margin:8px 0;padding:0;list-style:none">'); inUl = true; }
+      const item = line.replace(/^[*\-•] /,'');
+      out.push(`<li style="display:flex;gap:8px;margin-bottom:5px;line-height:1.55"><span style="color:var(--accent);flex-shrink:0;margin-top:2px">▸</span><span>${inline(item)}</span></li>`);
+
+    // Lista ordenada
+    } else if (/^\d+\. (.+)/.test(line)) {
+      if (inUl) { out.push('</ul>'); inUl = false; }
+      if (!inOl) { out.push('<ol style="margin:8px 0;padding-left:20px">'); inOl = true; }
+      const item = line.replace(/^\d+\. /,'');
+      out.push(`<li style="margin-bottom:5px;line-height:1.55">${inline(item)}</li>`);
+
+    // Línea vacía
+    } else if (line.trim() === '') {
+      closeList();
+      out.push('<div style="height:5px"></div>');
+
+    // Párrafo normal
+    } else {
+      closeList();
+      out.push(`<p style="margin:3px 0;line-height:1.65">${inline(line)}</p>`);
+    }
+  }
+  closeList();
+  return out.join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+
+async function sendChat(key) {
+  const inp = document.getElementById('chatInput');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += `<div class="msg-user"><strong>Vos:</strong> ${msg}</div>`;
+  inp.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  msgs.innerHTML += `<div class="msg-bot" id="typing"><em style="color:var(--muted)">Claude está escribiendo...</em></div>`;
+  try {
+    const esCorporativo = key === 'corporativo';
+    const systemPrompt = esCorporativo
+      ? `Sos el Asistente Corporativo de Geo Tax SAS, estudio contable especializado en Buenos Aires, Argentina. Atendés a clientes como Red Intercable Satelital S.A.
+
+## Tu rol
+Respondés consultas sobre:
+- Constitución y trámites de sociedades (SAS, SRL, SA) — Ley 19.550 y Ley 27.349
+- Impuestos argentinos: IVA, Ganancias, Ingresos Brutos, Bienes Personales, Monotributo
+- Obligaciones laborales, previsionales y sindicales
+- Facturación electrónica AFIP, comprobantes, régimen de retenciones
+- Vencimientos impositivos y calendario fiscal AFIP
+- Régimen simplificado vs. responsable inscripto
+
+## Cómo respondés
+- Usá un tono profesional, cálido y en español rioplatense
+- Estructurá tus respuestas con títulos (##) y listas cuando sea útil
+- Sé preciso con números, alícuotas y fechas cuando los conozcas
+- Si no tenés certeza sobre algo, indicá que lo consultarás con el equipo del estudio
+- Cerrá siempre con una frase que invite a continuar la consulta`
+      : `Sos el asistente de soporte de Geo Tax SAS. Respondé de forma clara, profesional y en español rioplatense. Usá títulos y listas cuando sea útil para organizar la información.`;
+    const response = await fetch('/api/claude', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model: esCorporativo ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001', max_tokens:1024, system: systemPrompt, messages:[{role:'user',content:msg}] })
+    });
+    const data = await response.json();
+    document.getElementById('typing')?.remove();
+    const rawText = data.content?.[0]?.text || 'Error en la respuesta.';
+    msgs.innerHTML += `<div class="msg-bot">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+        <span style="font-size:15px">🤖</span>
+        <strong style="font-size:12px;color:var(--accent);letter-spacing:.3px">ASISTENTE CORPORATIVO</strong>
+      </div>
+      <div style="font-size:13px">${markdownToHtml(rawText)}</div>
+    </div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch(err) {
+    document.getElementById('typing')?.remove();
+    msgs.innerHTML += `<div class="msg-bot" style="color:var(--red)">Error: ${err.message}</div>`;
+  }
+}
+
+function copyOutput() {
+  const ob = document.getElementById('outputBox');
+  const txt = ob?._rawText || ob?.textContent;
+  if (txt) { navigator.clipboard.writeText(txt); showToast('📋 Copiado','Texto copiado al portapapeles.'); }
+}
+function downloadOutput(name) {
+  const ob = document.getElementById('outputBox');
+  const txt = ob?._rawText || ob?.textContent;
+  if (!txt) return;
+  const a = document.createElement('a');
+  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt);
+  a.download = (name||'resultado') + '_geotax.txt';
+  a.click();
+  showToast('⬇ Descargado','Archivo guardado.');
+}
+
+function downloadExcel() {
+  // Si tenemos un workbook de conciliación generado, descargarlo directamente
+  if (lastConciliacionResult) {
+    const fecha = lastConciliacionResult.fecha.toISOString().split('T')[0].replace(/-/g,'');
+    XLSX.writeFile(lastConciliacionResult.wb, `Conciliacion_Bancaria_${fecha}.xlsx`);
+    showToast('📊 Excel descargado', 'Conciliacion_Bancaria_' + fecha + '.xlsx');
+    return;
+  }
+  const txt = document.getElementById('outputBox')?._rawText || document.getElementById('outputBox')?.textContent;
+  if (!txt || txt.includes('aparecerá aquí')) return;
+
+  const wb = XLSX.utils.book_new();
+  const lines = txt.split('\n');
+  const allRows = [];
+  allRows.push(['REPORTE DE CONCILIACIÓN BANCARIA - GEO TAX SAS']);
+  allRows.push(['Generado: ' + new Date().toLocaleString('es-AR')]);
+  allRows.push(['']);
+
+  let tableBuffer = [];
+  function flushTable() {
+    if (tableBuffer.length > 0) { tableBuffer.forEach(r => allRows.push(r)); allRows.push(['']); tableBuffer = []; }
+  }
+  for (const line of lines) {
+    if (line.startsWith('## ') || line.startsWith('# ')) {
+      flushTable(); allRows.push(['']); allRows.push([line.replace(/^#+\s*/, '').toUpperCase()]);
+    } else if (line.startsWith('| ') && !line.match(/^\|[-| ]+\|$/)) {
+      tableBuffer.push(line.split('|').filter(c=>c.trim()!=='').map(c=>c.trim()));
+    } else if (!line.match(/^\|[-| ]+\|$/) && line.trim()) {
+      flushTable(); allRows.push([line.trim()]);
+    }
+  }
+  flushTable();
+
+  const ws1 = XLSX.utils.aoa_to_sheet(allRows);
+  ws1['!cols'] = [{wch:50},{wch:25},{wch:25},{wch:25},{wch:25}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'Conciliación');
+
+  const tableRows = [['TABLAS DE DATOS EXTRAÍDAS'],[]];
+  for (const line of lines) {
+    if (line.startsWith('| ') && !line.match(/^\|[-| ]+\|$/))
+      tableRows.push(line.split('|').filter(c=>c.trim()!=='').map(c=>c.trim()));
+  }
+  if (tableRows.length > 2) {
+    const ws2 = XLSX.utils.aoa_to_sheet(tableRows);
+    ws2['!cols'] = [{wch:20},{wch:15},{wch:40},{wch:20},{wch:20}];
+    XLSX.utils.book_append_sheet(wb, ws2, 'Tablas');
+  }
+
+  XLSX.writeFile(wb, `conciliacion_bancaria_${new Date().toISOString().split('T')[0]}.xlsx`);
+  showToast('📊 Excel descargado', 'Archivo guardado en tu computadora.');
+}
+
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = isDark ? 'Modo claro' : 'Modo oscuro';
+}
+function showToast(title, msg) {
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+function hideToast() { document.getElementById('toast').classList.remove('show'); }
+</script>
+</body>
+</html>
